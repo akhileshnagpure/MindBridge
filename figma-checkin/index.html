@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge – Daily Check-In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────── */
+    :root {
+      /* Background */
+      --background-main:   #F4F6F5;
+      --background-card:   #FFFFFF;
+
+      /* Primary – Soft Teal / Sage */
+      --primary-teal:        #4A9E8E;
+      --primary-teal-soft:   #E6F4F1;
+      --primary-teal-dark:   #357A6C;
+      --primary-teal-bright: #5BBCAA;
+
+      /* Text */
+      --text-primary:   #1A2B28;
+      --text-secondary: #5A7066;
+      --text-muted:     #9AB5AE;
+      --text-inverse:   #FFFFFF;
+
+      /* Semantic */
+      --success:        #3DAA6B;
+      --success-soft:   #E6F7EE;
+      --warning-amber:  #E8A838;
+      --warning-soft:   #FDF3E0;
+      --border:         #DDE8E5;
+      --border-focus:   #4A9E8E;
+
+      /* Sidebar */
+      --sidebar-bg:     #FFFFFF;
+      --sidebar-active: #E6F4F1;
+      --sidebar-width:  240px;
+      --topnav-height:  72px;
+
+      /* Radius */
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-full: 9999px;
+
+      /* Shadow */
+      --shadow-card: 0 1px 4px rgba(26,43,40,0.06), 0 4px 16px rgba(26,43,40,0.04);
+      --shadow-hover: 0 4px 20px rgba(74,158,142,0.18);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1440px;
+      height: 900px;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      background: var(--background-main);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── LAYOUT SHELL ───────────────────────────────────── */
+    .app-shell {
+      display: flex;
+      width: 1440px;
+      height: 900px;
+    }
+
+    /* ─── SIDEBAR ────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 900px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      flex-shrink: 0;
+      box-shadow: 1px 0 0 var(--border);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg { width: 20px; height: 20px; fill: #fff; }
+
+    .logo-text {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+    .logo-text span { color: var(--primary-teal); }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 12px;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 12px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover { background: var(--primary-teal-soft); color: var(--primary-teal); }
+
+    .nav-item.active {
+      background: var(--primary-teal-soft);
+      color: var(--primary-teal);
+      font-weight: 700;
+    }
+
+    .nav-item.active svg { stroke: var(--primary-teal); }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--primary-teal);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+    }
+
+    .sidebar-footer {
+      padding: 16px 12px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .sidebar-user:hover { background: var(--primary-teal-soft); }
+
+    .avatar-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #A8D8CF, #4A9E8E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-info { flex: 1; overflow: hidden; }
+    .sidebar-user-name { font-size: 13px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-user-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ─── MAIN AREA ──────────────────────────────────────── */
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 900px;
+      overflow: hidden;
+    }
+
+    /* ─── TOP NAVIGATION ─────────────────────────────────── */
+    .top-nav {
+      height: var(--topnav-height);
+      background: var(--background-card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      flex-shrink: 0;
+    }
+
+    .top-nav-left { display: flex; flex-direction: column; gap: 2px; }
+
+    .page-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .page-breadcrumb span { color: var(--primary-teal); font-weight: 600; }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .top-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      position: relative;
+    }
+
+    .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-btn:hover { background: var(--primary-teal-soft); border-color: var(--primary-teal); color: var(--primary-teal); }
+
+    .notif-dot {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 8px; height: 8px;
+      background: var(--warning-amber);
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--background-main);
+    }
+
+    .profile-card:hover { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+
+    .avatar-lg {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #A8D8CF, #4A9E8E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .profile-info { }
+    .profile-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .profile-email { font-size: 11px; color: var(--text-muted); }
+
+    .profile-chevron { color: var(--text-muted); }
+    .profile-chevron svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── SCROLL CONTENT ─────────────────────────────────── */
+    .content-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+      background: var(--background-main);
+    }
+
+    .content-scroll::-webkit-scrollbar { width: 6px; }
+    .content-scroll::-webkit-scrollbar-track { background: transparent; }
+    .content-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ─── CHECK-IN CONTENT ───────────────────────────────── */
+    .checkin-content {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 960px;
+    }
+
+    /* ─── CHECK-IN HEADER ────────────────────────────────── */
+    .checkin-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .checkin-header-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-teal-soft);
+      color: var(--primary-teal);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(74,158,142,0.2);
+    }
+
+    .date-badge svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .checkin-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .checkin-subtitle {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── CARD BASE ──────────────────────────────────────── */
+    .card {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; color: var(--primary-teal); }
+
+    /* ─── MOOD SELECTOR ──────────────────────────────────── */
+    .mood-selector {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
+    }
+
+    .mood-grid {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mood-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 12px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.18s;
+      background: var(--background-main);
+    }
+
+    .mood-option:hover {
+      border-color: var(--primary-teal);
+      background: var(--primary-teal-soft);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .mood-option.selected {
+      border-color: var(--primary-teal);
+      background: var(--primary-teal-soft);
+      box-shadow: 0 0 0 3px rgba(74,158,142,0.12);
+    }
+
+    .mood-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mood-option svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--text-secondary);
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mood-option.selected svg,
+    .mood-option:hover svg { stroke: var(--primary-teal); }
+
+    .mood-emoji { font-size: 30px; line-height: 1; }
+
+    .mood-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .mood-option.selected .mood-label,
+    .mood-option:hover .mood-label { color: var(--primary-teal); }
+
+    .mood-selected-check {
+      width: 18px;
+      height: 18px;
+      background: var(--primary-teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mood-selected-check svg { width: 10px; height: 10px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── TWO COLUMN ─────────────────────────────────────── */
+    .two-col {
+      display: flex;
+      gap: 24px;
+    }
+
+    .two-col > * { flex: 1; }
+
+    /* ─── JOURNAL CARD ───────────────────────────────────── */
+    .textarea-wrapper {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color 0.15s;
+      background: var(--background-main);
+    }
+
+    .textarea-wrapper:focus-within { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(74,158,142,0.1); }
+
+    .journal-textarea {
+      width: 100%;
+      height: 112px;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      padding: 14px 16px;
+      resize: none;
+      line-height: 1.6;
+    }
+
+    .journal-textarea::placeholder { color: var(--text-muted); }
+
+    .char-counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--background-card);
+    }
+
+    .char-counter-text { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+    .toolbar-icons { display: flex; gap: 8px; }
+
+    .toolbar-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; border-radius: 4px; }
+    .toolbar-icon:hover { color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .toolbar-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── INPUT FIELDS ───────────────────────────────────── */
+    .input-group { display: flex; flex-direction: column; gap: 8px; }
+
+    .input-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .input-label svg { width: 14px; height: 14px; stroke: var(--primary-teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .slider-container { display: flex; flex-direction: column; gap: 10px; }
+
+    .slider-track-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      position: relative;
+    }
+
+    .slider-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 68%;
+      background: linear-gradient(90deg, var(--primary-teal-soft), var(--primary-teal));
+      border-radius: var(--radius-full);
+    }
+
+    .slider-thumb {
+      position: absolute;
+      top: 50%;
+      left: 68%;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      background: var(--primary-teal);
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 1px 4px rgba(74,158,142,0.4);
+    }
+
+    .slider-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary-teal);
+      width: 32px;
+      text-align: right;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .select-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--background-main);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239AB5AE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .select-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(74,158,142,0.1); }
+
+    /* ─── BOTTOM ROW ─────────────────────────────────────── */
+    .bottom-row {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    /* ─── STREAK CARD ────────────────────────────────────── */
+    .streak-card {
+      background: linear-gradient(135deg, var(--primary-teal-soft) 0%, #D4EEE9 100%);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid rgba(74,158,142,0.2);
+      box-shadow: var(--shadow-card);
+      flex: 0 0 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .streak-header { display: flex; align-items: center; justify-content: space-between; }
+    .streak-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+    .streak-icon { width: 40px; height: 40px; background: var(--success-soft); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .streak-icon svg { width: 22px; height: 22px; stroke: var(--success); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .streak-value-row { display: flex; align-items: baseline; gap: 6px; }
+    .streak-number { font-size: 42px; font-weight: 800; color: var(--text-primary); line-height: 1; letter-spacing: -2px; }
+    .streak-unit { font-size: 16px; font-weight: 700; color: var(--text-secondary); }
+
+    .streak-progress-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .streak-bar { height: 6px; background: rgba(74,158,142,0.15); border-radius: var(--radius-full); overflow: hidden; }
+    .streak-bar-fill { height: 100%; width: 70%; background: linear-gradient(90deg, var(--primary-teal), var(--success)); border-radius: var(--radius-full); }
+
+    /* ─── SUBMIT SECTION ─────────────────────────────────── */
+    .submit-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .submit-card {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .submit-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .submit-card-body { font-size: 13px; font-weight: 500; color: var(--text-secondary); line-height: 1.6; }
+
+    .progress-section { display: flex; flex-direction: column; gap: 8px; }
+    .progress-label-row { display: flex; justify-content: space-between; align-items: center; }
+    .progress-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+    .progress-pct { font-size: 12px; font-weight: 800; color: var(--primary-teal); }
+    .progress-bar { height: 8px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; }
+    .progress-bar-fill { height: 100%; width: 75%; background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-bright)); border-radius: var(--radius-full); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px 28px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.1px;
+    }
+
+    .btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .btn-primary {
+      background: var(--primary-teal);
+      color: var(--text-inverse);
+      width: 100%;
+    }
+
+    .btn-primary:hover { background: var(--primary-teal-dark); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary-teal);
+      border: 2px solid var(--primary-teal);
+    }
+
+    .btn-secondary:hover { background: var(--primary-teal-soft); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover { background: var(--background-main); color: var(--text-primary); }
+
+    .microcopy {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+      font-style: italic;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .microcopy svg { width: 14px; height: 14px; stroke: var(--warning-amber); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── RECENT INSIGHTS STRIP ──────────────────────────── */
+    .insights-strip {
+      display: flex;
+      gap: 16px;
+    }
+
+    .insight-pill {
+      flex: 1;
+      background: var(--background-card);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .insight-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-teal { background: var(--primary-teal); }
+    .dot-amber { background: var(--warning-amber); }
+    .dot-green { background: var(--success); }
+
+    .insight-text { flex: 1; }
+    .insight-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .insight-value { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+
+    /* Tags / Badges */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tag-teal { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .tag-amber { background: var(--warning-soft); color: var(--warning-amber); }
+    .tag-green { background: var(--success-soft); color: var(--success); }
+
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════════════════════════════════════
+       SIDEBAR NAVIGATION  (component: Sidebar Navigation)
+       State: Expanded  |  Variant: default
+  ════════════════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      </div>
+      <span class="logo-text">Mind<span>Bridge</span></span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+
+      <!-- Home -->
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+
+      <!-- Check-In (active) -->
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Check-In
+        <span class="nav-badge">Today</span>
+      </a>
+
+      <!-- My Journey -->
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        My Journey
+      </a>
+
+      <!-- Sessions -->
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Sessions
+      </a>
+
+      <div class="nav-section-label" style="margin-top:8px;">Account</div>
+
+      <!-- Settings -->
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer – User -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar-sm">PS</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Priya Sharma</div>
+          <div class="sidebar-user-role">Patient</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AB5AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════
+       MAIN AREA
+  ════════════════════════════════════════════════════ -->
+  <div class="main-area">
+
+    <!-- ─── TOP NAVIGATION (component: Top Navigation) ─── -->
+    <header class="top-nav">
+      <div class="top-nav-left">
+        <div class="page-breadcrumb">
+          Portal
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Daily Check-In</span>
+        </div>
+        <div class="page-title">Daily Check-In</div>
+      </div>
+
+      <div class="top-nav-right">
+
+        <!-- Notification bell -->
+        <button class="icon-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+
+        <!-- Help -->
+        <button class="icon-btn">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+
+        <!-- Profile card -->
+        <div class="profile-card">
+          <div class="avatar-lg">PS</div>
+          <div class="profile-info">
+            <div class="profile-name">Priya Sharma</div>
+            <div class="profile-email">priya.sharma@techcorp.com</div>
+          </div>
+          <div class="profile-chevron">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ─── SCROLLABLE CONTENT ──────────────────────────── -->
+    <div class="content-scroll">
+      <div class="checkin-content">
+
+        <!-- Recent Insights Strip -->
+        <div class="insights-strip">
+          <div class="insight-pill">
+            <div class="insight-dot dot-teal"></div>
+            <div class="insight-text">
+              <div class="insight-label">Avg. Mood (7d)</div>
+              <div class="insight-value">Good · 4.1 / 5</div>
+            </div>
+            <span class="tag tag-teal">↑ +0.3</span>
+          </div>
+          <div class="insight-pill">
+            <div class="insight-dot dot-green"></div>
+            <div class="insight-text">
+              <div class="insight-label">Sleep (avg)</div>
+              <div class="insight-value">7.2 hrs / night</div>
+            </div>
+            <span class="tag tag-green">Good</span>
+          </div>
+          <div class="insight-pill">
+            <div class="insight-dot dot-amber"></div>
+            <div class="insight-text">
+              <div class="insight-label">Energy (avg)</div>
+              <div class="insight-value">6.8 / 10</div>
+            </div>
+            <span class="tag tag-amber">Moderate</span>
+          </div>
+          <div class="insight-pill">
+            <div class="insight-dot dot-teal"></div>
+            <div class="insight-text">
+              <div class="insight-label">Check-In Streak</div>
+              <div class="insight-value">14 consecutive days</div>
+            </div>
+            <span class="tag tag-teal">🔥 Active</span>
+          </div>
+        </div>
+
+        <!-- ─── CHECK-IN HEADER ─────────────────────────── -->
+        <div class="checkin-header">
+          <div class="checkin-header-meta">
+            <span class="date-badge">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Thursday, March 13 · 2026
+            </span>
+          </div>
+          <h1 class="checkin-title">How are you feeling today?</h1>
+          <p class="checkin-subtitle">Your daily check-in helps you understand your emotional patterns.</p>
+        </div>
+
+        <!-- ─── MOOD SELECTOR (component: Mood Selector) ── -->
+        <div class="mood-selector">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            Mood Check
+          </div>
+          <div class="mood-grid">
+
+            <!-- Very Low -->
+            <div class="mood-option">
+              <div class="mood-emoji">😞</div>
+              <span class="mood-label">Very Low</span>
+            </div>
+
+            <!-- Low -->
+            <div class="mood-option">
+              <div class="mood-emoji">😕</div>
+              <span class="mood-label">Low</span>
+            </div>
+
+            <!-- Neutral -->
+            <div class="mood-option">
+              <div class="mood-emoji">😐</div>
+              <span class="mood-label">Neutral</span>
+            </div>
+
+            <!-- Good (selected) -->
+            <div class="mood-option selected">
+              <div class="mood-emoji">🙂</div>
+              <span class="mood-label">Good</span>
+              <div class="mood-selected-check">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+
+            <!-- Great -->
+            <div class="mood-option">
+              <div class="mood-emoji">😄</div>
+              <span class="mood-label">Great</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ─── JOURNAL ENTRY CARD ────────────────────────── -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Journal Entry
+          </div>
+          <div class="textarea-wrapper">
+            <textarea
+              class="journal-textarea"
+              placeholder="Write about how you're feeling today..."
+            ></textarea>
+            <div class="char-counter">
+              <span class="char-counter-text">0 / 500 characters</span>
+              <div class="toolbar-icons">
+                <div class="toolbar-icon">
+                  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </div>
+                <div class="toolbar-icon">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </div>
+                <div class="toolbar-icon">
+                  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── ENERGY + SLEEP INPUTS ─────────────────────── -->
+        <div class="two-col">
+
+          <!-- Energy Level -->
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Energy Level
+            </div>
+            <div class="input-group">
+              <div class="slider-container">
+                <div class="slider-track-wrapper">
+                  <div class="slider-track">
+                    <div class="slider-fill"></div>
+                    <div class="slider-thumb"></div>
+                  </div>
+                  <div class="slider-value">7</div>
+                </div>
+                <div class="slider-labels">
+                  <span>Low (1)</span>
+                  <span>Moderate (5)</span>
+                  <span>High (10)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sleep Quality -->
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              Sleep Quality
+            </div>
+            <div class="input-group">
+              <select class="select-input">
+                <option value="">Select sleep quality…</option>
+                <option value="poor">Poor</option>
+                <option value="fair">Fair</option>
+                <option value="good" selected>Good</option>
+                <option value="excellent">Excellent</option>
+              </select>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:14px;">
+              <span class="tag tag-green">Good selected</span>
+              <span class="tag tag-teal">7–8 hrs</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ─── BOTTOM ROW: Streak + Submit ─────────────── -->
+        <div class="bottom-row">
+
+          <!-- Streak Display Card -->
+          <div class="streak-card">
+            <div class="streak-header">
+              <span class="streak-label">Current Check-In Streak</span>
+              <div class="streak-icon">
+                <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+              </div>
+            </div>
+            <div class="streak-value-row">
+              <span class="streak-number">14</span>
+              <span class="streak-unit">Days</span>
+            </div>
+            <div class="streak-progress-label">Next milestone: 21 days</div>
+            <div class="streak-bar">
+              <div class="streak-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Submit Section -->
+          <div class="submit-section">
+            <div class="submit-card">
+              <div class="submit-card-title">Almost done!</div>
+              <div class="submit-card-body">Review your responses above, then submit your check-in. Your data stays private and helps personalise your journey.</div>
+
+              <div class="progress-section">
+                <div class="progress-label-row">
+                  <span class="progress-label">Check-In Completion</span>
+                  <span class="progress-pct">75%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-bar-fill"></div>
+                </div>
+              </div>
+
+              <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Submit Check-In
+              </button>
+
+              <div class="microcopy">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                "Showing up for yourself today is a powerful step."
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /checkin-content -->
+    </div><!-- /content-scroll -->
+
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+</body>
+</html>

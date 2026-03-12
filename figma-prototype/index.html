@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge – User Flow Map & Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    /* ═══ TOKENS ══════════════════════════════════════════ */
+    :root {
+      --background-main:    #F4F6F5;
+      --background-card:    #FFFFFF;
+      --primary-teal:       #4A9E8E;
+      --primary-teal-soft:  #E6F4F1;
+      --primary-teal-dark:  #357A6C;
+      --text-primary:       #1A2B28;
+      --text-secondary:     #5A7066;
+      --text-muted:         #9AB5AE;
+      --success:            #3DAA6B;
+      --success-soft:       #E6F7EE;
+      --warning-amber:      #E8A838;
+      --warning-soft:       #FDF3E0;
+      --border:             #DDE8E5;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-full: 9999px;
+      --shadow-card: 0 1px 3px rgba(26,43,40,0.06), 0 4px 16px rgba(26,43,40,0.05);
+      --shadow-hover: 0 6px 24px rgba(74,158,142,0.18);
+    }
+
+    /* ═══ RESET ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Nunito', sans-serif;
+      background: #E4EAE8;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      min-width: 1440px;
+      padding: 48px;
+    }
+
+    /* ═══ PAGE HEADER ═════════════════════════════════════ */
+    .page-header { margin-bottom: 44px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--primary-teal-soft); color: var(--primary-teal);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+      padding: 4px 12px; border-radius: var(--radius-full); margin-bottom: 12px;
+    }
+    .eyebrow svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .page-h1 { font-size: 30px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; margin-bottom: 6px; }
+    .page-sub { font-size: 14px; font-weight: 500; color: var(--text-secondary); max-width: 700px; line-height: 1.6; }
+
+    /* ═══ SECTION ═════════════════════════════════════════ */
+    .section {
+      background: var(--background-card);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+    .section-head {
+      display: flex; align-items: center; gap: 12px;
+      padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 28px;
+    }
+    .section-icon {
+      width: 38px; height: 38px; border-radius: var(--radius-sm);
+      background: var(--primary-teal-soft);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .section-icon svg { width: 18px; height: 18px; stroke: var(--primary-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .section-title { font-size: 17px; font-weight: 800; color: var(--text-primary); }
+    .section-sub { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+    .section-badge {
+      margin-left: auto; font-size: 11px; font-weight: 700;
+      background: var(--primary-teal-soft); color: var(--primary-teal);
+      padding: 3px 10px; border-radius: var(--radius-full);
+    }
+
+    /* ═══ SCREEN THUMBNAILS ═══════════════════════════════ */
+    .screen-thumb {
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      background: var(--background-main);
+      width: 280px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .screen-thumb.starting { border-color: var(--primary-teal); box-shadow: 0 0 0 3px rgba(74,158,142,0.15), var(--shadow-card); }
+    .screen-thumb-header {
+      background: var(--background-card); border-bottom: 1px solid var(--border);
+      padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .thumb-dots { display: flex; gap: 4px; }
+    .thumb-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .thumb-title { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-left: 4px; }
+    .screen-thumb-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .thumb-bar { height: 7px; border-radius: 4px; background: var(--border); }
+    .thumb-bar-teal { background: linear-gradient(90deg, var(--primary-teal), #5BBCAA); }
+    .thumb-card { background: var(--background-card); border-radius: 6px; padding: 10px; border: 1px solid var(--border); }
+    .thumb-card-title { font-size: 10px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; }
+    .thumb-row { display: flex; gap: 5px; }
+    .thumb-chip {
+      flex: 1; height: 22px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+    }
+    .thumb-chip-teal { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .thumb-chip-border { border: 1px solid var(--border); color: var(--text-muted); }
+    .thumb-chip-selected { background: var(--primary-teal); color: #fff; }
+    .thumb-btn {
+      background: var(--primary-teal); color: #fff;
+      border-radius: 6px; padding: 7px 10px;
+      font-size: 10px; font-weight: 700; text-align: center; margin-top: 4px;
+    }
+    .thumb-btn-ghost {
+      border: 1px solid var(--primary-teal); color: var(--primary-teal);
+      border-radius: 6px; padding: 7px 10px;
+      font-size: 10px; font-weight: 700; text-align: center; margin-top: 4px;
+    }
+    .screen-node-label {
+      position: absolute; top: 8px; right: 8px;
+      font-size: 9px; font-weight: 700;
+      background: rgba(26,43,40,0.75); color: #fff;
+      padding: 2px 6px; border-radius: 4px;
+      backdrop-filter: blur(4px);
+    }
+    .starting-pill {
+      position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
+      background: var(--primary-teal); color: #fff;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 6px 6px 0 0;
+    }
+
+    /* ═══ FLOW ARROWS ═════════════════════════════════════ */
+    .flow-arrow {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 6px; flex-shrink: 0; padding: 0 8px;
+    }
+    .arrow-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-dark));
+      position: relative;
+    }
+    .arrow-line::after {
+      content: '';
+      position: absolute; right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--primary-teal-dark);
+    }
+    .arrow-line-back {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--border), var(--text-muted));
+      position: relative;
+    }
+    .arrow-line-back::after {
+      content: '';
+      position: absolute; left: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 8px solid var(--text-muted);
+    }
+    .arrow-label {
+      font-size: 10px; font-weight: 700;
+      color: var(--primary-teal);
+      background: var(--primary-teal-soft);
+      padding: 3px 8px; border-radius: var(--radius-full);
+      text-align: center; white-space: nowrap;
+    }
+    .arrow-label-back {
+      font-size: 10px; font-weight: 700;
+      color: var(--text-muted);
+      background: var(--background-main);
+      padding: 3px 8px; border-radius: var(--radius-full);
+      text-align: center; white-space: nowrap;
+      border: 1px solid var(--border);
+    }
+
+    /* ═══ FLOW ROW ════════════════════════════════════════ */
+    .flow-row {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 20px;
+    }
+    .flow-row-return {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 0; margin-left: 40px;
+    }
+    .flow-block {
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+    }
+    .flow-block-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-align: center; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ═══ INTERACTION TABLE ═══════════════════════════════ */
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--background-main); }
+    th {
+      text-align: left; font-size: 11px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 14px; border-bottom: 1px solid var(--border);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--background-main); }
+    .td-screen {
+      font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .td-screen-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-dashboard { background: var(--primary-teal); }
+    .dot-checkin   { background: var(--success); }
+    .dot-booking   { background: var(--warning-amber); }
+    .td-trigger {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--background-main); border: 1px solid var(--border);
+      border-radius: 5px; padding: 3px 9px;
+      font-size: 12px; font-weight: 700; color: var(--text-primary);
+      font-family: monospace;
+    }
+    .td-anim {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 700; color: var(--primary-teal);
+    }
+    .td-dest {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--primary-teal-soft); color: var(--primary-teal);
+      border-radius: 5px; padding: 3px 9px;
+      font-size: 12px; font-weight: 700;
+    }
+    .td-dest svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ═══ CONFIRMATION MODAL PREVIEW ═════════════════════ */
+    .modal-overlay {
+      background: rgba(26,43,40,0.5);
+      border-radius: var(--radius-md);
+      padding: 60px 40px;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+    .modal-card {
+      background: var(--background-card);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      width: 420px;
+      box-shadow: 0 24px 64px rgba(26,43,40,0.22);
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      text-align: center;
+    }
+    .modal-icon {
+      width: 64px; height: 64px;
+      background: var(--success-soft);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-icon svg { width: 30px; height: 30px; stroke: var(--success); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .modal-title { font-size: 20px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.3px; }
+    .modal-body { font-size: 14px; font-weight: 500; color: var(--text-secondary); line-height: 1.6; max-width: 320px; }
+    .modal-detail {
+      background: var(--primary-teal-soft); border-radius: var(--radius-sm);
+      padding: 14px 20px; width: 100%;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .modal-detail-row { display: flex; align-items: center; justify-content: space-between; }
+    .modal-detail-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+    .modal-detail-label svg { width: 13px; height: 13px; stroke: var(--text-muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .modal-detail-value { font-size: 12px; font-weight: 800; color: var(--text-primary); }
+    .modal-btn {
+      width: 100%; background: var(--primary-teal); color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700;
+      padding: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .modal-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .modal-btn-ghost {
+      width: 100%; background: transparent; color: var(--text-secondary);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+      padding: 11px; cursor: pointer;
+    }
+    .modal-note { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+
+    /* ═══ SIDEBAR STATES ══════════════════════════════════ */
+    .sidebar-states { display: flex; gap: 24px; align-items: flex-start; }
+    .sidebar-demo {
+      border-radius: var(--radius-md); border: 1px solid var(--border);
+      overflow: hidden; box-shadow: var(--shadow-card);
+      background: var(--background-card);
+    }
+    .sidebar-expanded { width: 200px; }
+    .sidebar-collapsed { width: 64px; }
+    .sb-logo-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .sb-logo-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sb-logo-mark svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .sb-logo-text { font-size: 13px; font-weight: 800; color: var(--text-primary); }
+    .sb-logo-text span { color: var(--primary-teal); }
+    .sb-nav { padding: 10px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .sb-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 6px; cursor: pointer;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    }
+    .sb-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .sb-item.active { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .sb-item-icon-only {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 6px; cursor: pointer;
+      color: var(--text-secondary); margin: 2px auto;
+    }
+    .sb-item-icon-only svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sb-item-icon-only.active { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .collapse-toggle {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border);
+      cursor: pointer; font-size: 11px; font-weight: 700; color: var(--text-muted);
+    }
+    .collapse-toggle svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .collapse-toggle:hover { background: var(--primary-teal-soft); color: var(--primary-teal); }
+
+    /* ═══ HOVER STATE EXAMPLES ════════════════════════════ */
+    .hover-demos { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hover-item { display: flex; flex-direction: column; gap: 8px; }
+    .hover-label { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px; padding: 10px 18px; border-radius: var(--radius-sm); border: none; cursor: pointer; }
+    .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-default { background: var(--primary-teal); color: #fff; }
+    .btn-hovered { background: var(--primary-teal-dark); color: #fff; box-shadow: 0 4px 16px rgba(74,158,142,0.3); }
+    .btn-focused  { background: var(--primary-teal); color: #fff; box-shadow: 0 0 0 3px rgba(74,158,142,0.25); outline: 2px solid var(--primary-teal); outline-offset: 2px; }
+    .nav-default { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .nav-default svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-hovered { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .nav-active-state { background: var(--primary-teal-soft); color: var(--primary-teal); font-weight: 700; }
+    .time-slot { padding: 8px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: transparent; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-secondary); cursor: pointer; }
+    .time-slot-hover    { border-color: var(--primary-teal); background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .time-slot-selected { background: var(--primary-teal); border-color: var(--primary-teal); color: #fff; }
+
+    /* ═══ LEGEND ══════════════════════════════════════════ */
+    .legend { display: flex; gap: 20px; flex-wrap: wrap; padding: 16px 20px; background: var(--background-main); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-line { width: 28px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ═══ FLOW NODE ═══════════════════════════════════════ */
+    .flow-node {
+      border-radius: var(--radius-md); padding: 12px 18px;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+      border: 2px solid;
+    }
+    .flow-node svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .flow-node-dashboard { background: var(--primary-teal-soft); color: var(--primary-teal); border-color: var(--primary-teal); }
+    .flow-node-checkin   { background: var(--success-soft); color: var(--success); border-color: var(--success); }
+    .flow-node-booking   { background: var(--warning-soft); color: var(--warning-amber); border-color: var(--warning-amber); }
+    .flow-node-modal     { background: #fff; color: var(--text-secondary); border-color: var(--border); border-style: dashed; }
+
+    /* ═══ VERTICAL FLOW ═══════════════════════════════════ */
+    .vflow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+    .vflow-row { display: flex; align-items: center; gap: 0; }
+    .vflow-connector { display: flex; flex-direction: column; align-items: center; padding: 0 6px; }
+    .vflow-line { width: 2px; height: 28px; background: var(--primary-teal); margin: 0 auto; }
+    .vflow-line-dashed { width: 2px; height: 28px; background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 4px, transparent 4px, transparent 8px); margin: 0 auto; }
+    .vflow-arrow-down { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--primary-teal); margin: 0 auto; }
+    .vflow-arrow-down-muted { border-top-color: var(--border); }
+
+    /* ═══ TRIGGER PILL ════════════════════════════════════ */
+    .trigger-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--text-primary); color: #fff;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+      padding: 3px 10px; border-radius: var(--radius-full);
+    }
+    .trigger-pill svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .anim-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--primary-teal-soft); color: var(--primary-teal);
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: var(--radius-full);
+      border: 1px solid rgba(74,158,142,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── PAGE HEADER ──────────────────────────────────── -->
+  <div class="page-header">
+    <div class="eyebrow">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      MindBridge Patient Portal
+    </div>
+    <h1 class="page-h1">Prototype Flow Map</h1>
+    <p class="page-sub">Complete interactive prototype documentation — screen connections, trigger interactions, animation specs, component states, and overlay flows. Starting point: Wellness Dashboard.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 1 — PROTOTYPE STARTING POINT + OVERVIEW
+  ═══════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div>
+        <div class="section-title">Prototype Overview</div>
+        <div class="section-sub">3 screens · 2 primary flows · 1 confirmation overlay · Starting point: Wellness Dashboard</div>
+      </div>
+      <span class="section-badge">node-id: 118-2 → START</span>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--primary-teal);"></div> Wellness Dashboard (START)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--success);"></div> Daily Check-In</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--warning-amber);"></div> Therapist Session Booking</div>
+      <div class="legend-item"><div class="legend-line" style="background:var(--primary-teal);"></div> Primary navigation →</div>
+      <div class="legend-item"><div class="legend-line" style="background:var(--border);"></div> Return navigation ←</div>
+      <div class="legend-item"><div class="legend-line" style="background:var(--border);border-top:2px dashed var(--border);height:0;"></div> Overlay / Modal</div>
+    </div>
+
+    <!-- FLOW A: Dashboard → Check-In → Dashboard -->
+    <div style="margin-bottom:32px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;">Flow A — Mood Check-In</div>
+
+      <div class="flow-row">
+
+        <!-- Dashboard -->
+        <div class="flow-block">
+          <div class="flow-block-label">Start</div>
+          <div class="screen-thumb starting">
+            <div class="screen-node-label">118-2</div>
+            <div class="starting-pill">▶ Start</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Wellness Dashboard</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div class="thumb-bar thumb-bar-teal" style="width:60%;"></div>
+              <div class="thumb-card">
+                <div class="thumb-card-title">Quick Mood Log</div>
+                <div class="thumb-btn">Log Mood →</div>
+              </div>
+              <div style="display:flex;gap:5px;">
+                <div class="thumb-card" style="flex:1;">
+                  <div class="thumb-card-title">Streak</div>
+                  <div style="font-size:16px;font-weight:800;color:var(--primary-teal);">14</div>
+                </div>
+                <div class="thumb-card" style="flex:1;">
+                  <div class="thumb-card-title">Mood Avg</div>
+                  <div style="font-size:16px;font-weight:800;color:var(--success);">4.1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow → -->
+        <div class="flow-arrow">
+          <div class="arrow-label">Click "Log Mood" · On Click</div>
+          <div class="arrow-line"></div>
+          <div class="anim-pill">Smart Animate · 300ms</div>
+        </div>
+
+        <!-- Daily Check-In -->
+        <div class="flow-block">
+          <div class="flow-block-label">Screen 2</div>
+          <div class="screen-thumb">
+            <div class="screen-node-label">115-2</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Daily Check-In</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div class="thumb-bar" style="width:40%;"></div>
+              <div class="thumb-card">
+                <div class="thumb-card-title">Mood Selector</div>
+                <div class="thumb-row">
+                  <div class="thumb-chip thumb-chip-border">😞</div>
+                  <div class="thumb-chip thumb-chip-border">😕</div>
+                  <div class="thumb-chip thumb-chip-border">😐</div>
+                  <div class="thumb-chip thumb-chip-selected">🙂</div>
+                  <div class="thumb-chip thumb-chip-border">😄</div>
+                </div>
+              </div>
+              <div class="thumb-card">
+                <div class="thumb-card-title">Journal Entry</div>
+                <div class="thumb-bar" style="width:80%;height:5px;background:var(--border);border-radius:3px;"></div>
+                <div class="thumb-bar" style="width:60%;height:5px;background:var(--border);border-radius:3px;margin-top:3px;"></div>
+              </div>
+              <div class="thumb-btn">Submit Check-In →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow → Return -->
+        <div class="flow-arrow">
+          <div class="arrow-label">Click "Submit Check-In"</div>
+          <div class="arrow-line"></div>
+          <div class="anim-pill">Smart Animate · 300ms</div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="flow-block">
+          <div class="flow-block-label">Return</div>
+          <div class="screen-thumb starting" style="opacity:0.7;">
+            <div class="screen-node-label">118-2</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Wellness Dashboard</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div class="thumb-bar thumb-bar-teal" style="width:60%;"></div>
+              <div class="thumb-card">
+                <div class="thumb-card-title">Check-In Streak updated</div>
+                <div style="font-size:14px;font-weight:800;color:var(--success);">✓ Logged</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FLOW B: Dashboard → Session Booking → Modal → Dashboard -->
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;">Flow B — Book Therapy Session</div>
+
+      <div class="flow-row">
+
+        <!-- Dashboard -->
+        <div class="flow-block">
+          <div class="flow-block-label">Start</div>
+          <div class="screen-thumb starting">
+            <div class="screen-node-label">118-2</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Wellness Dashboard</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div class="thumb-card">
+                <div class="thumb-card-title">Upcoming Session</div>
+                <div class="thumb-row">
+                  <div class="thumb-chip thumb-chip-teal" style="flex:none;padding:0 8px;">Dr. Emily Carter</div>
+                </div>
+                <div class="thumb-btn" style="margin-top:6px;">Join Session</div>
+              </div>
+              <div style="font-size:9px;font-weight:700;color:var(--primary-teal);text-align:center;padding:4px;">← Sessions in Sidebar</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow → -->
+        <div class="flow-arrow">
+          <div class="arrow-label">Sidebar: Sessions · On Click</div>
+          <div class="arrow-line"></div>
+          <div class="anim-pill">Smart Animate · 300ms</div>
+        </div>
+
+        <!-- Session Booking -->
+        <div class="flow-block">
+          <div class="flow-block-label">Screen 3</div>
+          <div class="screen-thumb">
+            <div class="screen-node-label">121-2</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Session Booking</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div class="thumb-card">
+                <div class="thumb-card-title">Dr. Emily Carter</div>
+                <div class="thumb-row">
+                  <div class="thumb-chip thumb-chip-teal">Anxiety</div>
+                  <div class="thumb-chip thumb-chip-teal">Stress</div>
+                </div>
+              </div>
+              <div class="thumb-row">
+                <div class="thumb-chip thumb-chip-selected">Video ✓</div>
+                <div class="thumb-chip thumb-chip-border">Audio</div>
+                <div class="thumb-chip thumb-chip-border">Chat</div>
+              </div>
+              <div class="thumb-card">
+                <div class="thumb-card-title">Selected: Mar 15 · 3:00 PM</div>
+                <div class="thumb-btn">Book Session →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow → Modal -->
+        <div class="flow-arrow">
+          <div class="arrow-label">Click "Book Session"</div>
+          <div class="arrow-line"></div>
+          <div class="anim-pill">Overlay · Dissolve</div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div class="flow-block">
+          <div class="flow-block-label">Overlay Modal</div>
+          <div class="screen-thumb" style="width:200px;">
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Confirmation</span>
+            </div>
+            <div class="screen-thumb-body" style="background:rgba(26,43,40,0.08);padding:16px;">
+              <div style="background:#fff;border-radius:8px;padding:12px;text-align:center;">
+                <div style="font-size:18px;margin-bottom:4px;">✅</div>
+                <div style="font-size:10px;font-weight:800;color:var(--text-primary);margin-bottom:3px;">Session Booked!</div>
+                <div style="font-size:9px;color:var(--text-secondary);margin-bottom:8px;">Mar 15 · 3:00 PM</div>
+                <div class="thumb-btn" style="font-size:9px;padding:5px;">Return to Dashboard</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow → Dashboard -->
+        <div class="flow-arrow">
+          <div class="arrow-label">Click "Return to Dashboard"</div>
+          <div class="arrow-line"></div>
+          <div class="anim-pill">Navigate · 300ms</div>
+        </div>
+
+        <!-- Dashboard return -->
+        <div class="flow-block">
+          <div class="flow-block-label">Return</div>
+          <div class="screen-thumb starting" style="opacity:0.7;width:160px;">
+            <div class="screen-node-label">118-2</div>
+            <div class="screen-thumb-header">
+              <div class="thumb-dots">
+                <div class="thumb-dot" style="background:#EF5350;"></div>
+                <div class="thumb-dot" style="background:#FDD835;"></div>
+                <div class="thumb-dot" style="background:var(--success);"></div>
+              </div>
+              <span class="thumb-title">Dashboard</span>
+            </div>
+            <div class="screen-thumb-body">
+              <div style="font-size:9px;font-weight:700;color:var(--success);text-align:center;padding:8px;">✓ Session in calendar</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 2 — CONFIRMATION OVERLAY COMPONENT
+  ═══════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <div>
+        <div class="section-title">Confirmation Overlay Modal</div>
+        <div class="section-sub">Appears after "Book Session" click · Overlay type: Center modal · Animation: Dissolve 250ms</div>
+      </div>
+      <span class="section-badge">Overlay Component</span>
+    </div>
+
+    <div class="modal-overlay">
+      <div class="modal-card">
+
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+
+        <div class="modal-title">Session Successfully Booked!</div>
+        <div class="modal-body">Your therapy session has been confirmed. You'll receive a reminder 24 hours before your appointment.</div>
+
+        <div class="modal-detail">
+          <div class="modal-detail-row">
+            <div class="modal-detail-label">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Therapist
+            </div>
+            <div class="modal-detail-value">Dr. Emily Carter</div>
+          </div>
+          <div class="modal-detail-row">
+            <div class="modal-detail-label">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Date
+            </div>
+            <div class="modal-detail-value">Saturday, March 15</div>
+          </div>
+          <div class="modal-detail-row">
+            <div class="modal-detail-label">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Time
+            </div>
+            <div class="modal-detail-value">3:00 PM – 4:00 PM</div>
+          </div>
+          <div class="modal-detail-row">
+            <div class="modal-detail-label">
+              <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              Type
+            </div>
+            <div class="modal-detail-value">Video Call</div>
+          </div>
+        </div>
+
+        <button class="modal-btn">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Return to Dashboard
+        </button>
+        <button class="modal-btn-ghost">Add to Calendar</button>
+        <div class="modal-note">A confirmation email has been sent to priya.sharma@techcorp.com</div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 3 — SIDEBAR COLLAPSE TOGGLE
+  ═══════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18"/></svg></div>
+      <div>
+        <div class="section-title">Sidebar Collapse Interaction</div>
+        <div class="section-sub">Toggle between Expanded (240px) ↔ Collapsed (72px) · Smart Animate · 300ms</div>
+      </div>
+      <span class="section-badge">2 variants</span>
+    </div>
+
+    <div class="sidebar-states">
+
+      <!-- Expanded -->
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);margin-bottom:10px;">Expanded State — 240px</div>
+        <div class="sidebar-demo sidebar-expanded">
+          <div class="sb-logo-row">
+            <div class="sb-logo-mark"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+            <span class="sb-logo-text">Mind<span>Bridge</span></span>
+          </div>
+          <div class="sb-nav">
+            <div class="sb-item active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+            <div class="sb-item"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Check-In</div>
+            <div class="sb-item"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>My Journey</div>
+            <div class="sb-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Sessions</div>
+            <div class="sb-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+          </div>
+          <div class="collapse-toggle">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Collapse
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 20px;align-self:center;">
+        <div style="font-size:10px;font-weight:700;color:var(--primary-teal);text-align:center;">Click Collapse</div>
+        <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
+          <path d="M0 8h32" stroke="#4A9E8E" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 4l8 4-8 4" stroke="#4A9E8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="anim-pill">Smart Animate · 300ms</div>
+        <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
+          <path d="M40 8H8" stroke="#9AB5AE" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 4L2 8l8 4" stroke="#9AB5AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-align:center;">Click Expand icon</div>
+      </div>
+
+      <!-- Collapsed -->
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);margin-bottom:10px;">Collapsed State — 72px</div>
+        <div class="sidebar-demo sidebar-collapsed">
+          <div class="sb-logo-row" style="padding:14px;justify-content:center;">
+            <div class="sb-logo-mark"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          </div>
+          <div class="sb-nav" style="padding:10px 8px;align-items:center;">
+            <div class="sb-item-icon-only active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <div class="sb-item-icon-only"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <div class="sb-item-icon-only"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="sb-item-icon-only"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="sb-item-icon-only"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          </div>
+          <div class="collapse-toggle" style="justify-content:center;padding:10px 8px;">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 4 — HOVER STATES REFERENCE
+  ═══════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+      <div>
+        <div class="section-title">Hover & Focus States</div>
+        <div class="section-sub">All interactive elements support hover/focus using design tokens</div>
+      </div>
+      <span class="section-badge">WCAG AA</span>
+    </div>
+
+    <div class="hover-demos">
+
+      <!-- Buttons -->
+      <div class="hover-item">
+        <div class="hover-label">Button / Primary</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Default</div>
+            <button class="btn btn-default"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/></svg>Submit Check-In</button>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Hover</div>
+            <button class="btn btn-hovered"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/></svg>Submit Check-In</button>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Focus</div>
+            <button class="btn btn-focused"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/></svg>Submit Check-In</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav items -->
+      <div class="hover-item">
+        <div class="hover-label">Nav Item</div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:var(--background-card);padding:12px;border-radius:8px;border:1px solid var(--border);">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Default</div>
+            <div class="nav-default"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Check-In</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Hover</div>
+            <div class="nav-default nav-hovered"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Check-In</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Active</div>
+            <div class="nav-default nav-active-state"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Check-In</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time slots -->
+      <div class="hover-item">
+        <div class="hover-label">Time Slot</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Default</div>
+            <button class="time-slot">3:00 PM</button>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Hover</div>
+            <button class="time-slot time-slot-hover">3:00 PM</button>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">Selected</div>
+            <button class="time-slot time-slot-selected">3:00 PM</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 5 — COMPLETE INTERACTION SPEC TABLE
+  ═══════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div>
+        <div class="section-title">Full Interaction Spec Sheet</div>
+        <div class="section-sub">Every interactive element — trigger, animation, destination, duration</div>
+      </div>
+      <span class="section-badge">12 interactions</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Screen</th>
+          <th>Element</th>
+          <th>Trigger</th>
+          <th>Animation</th>
+          <th>Duration</th>
+          <th>Destination</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dashboard -->
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Sidebar · Home</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Wellness Dashboard (self)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Sidebar · Check-In</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Daily Check-In (115-2)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Sidebar · Sessions</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Session Booking (121-2)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Sidebar · My Journey</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Wellness Dashboard (self)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Quick Mood Log · "Log Mood" button</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Daily Check-In (115-2)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-dashboard"></div>Dashboard</div></td>
+          <td>Sidebar Collapse toggle</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Sidebar → Collapsed variant</span></td>
+        </tr>
+        <!-- Check-In -->
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-checkin"></div>Daily Check-In</div></td>
+          <td>Mood option (×5)</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Instant</span></td>
+          <td>0ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>MoodOption → Selected variant</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-checkin"></div>Daily Check-In</div></td>
+          <td>"Submit Check-In" button</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Wellness Dashboard (118-2)</span></td>
+        </tr>
+        <!-- Session Booking -->
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-booking"></div>Session Booking</div></td>
+          <td>Session Type (Video/Audio/Chat)</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Instant</span></td>
+          <td>0ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>SessionType → Selected variant</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-booking"></div>Session Booking</div></td>
+          <td>Calendar Day (selectable)</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Instant</span></td>
+          <td>0ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>CalendarDay → Selected variant</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-booking"></div>Session Booking</div></td>
+          <td>Time Slot button (×9)</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Instant</span></td>
+          <td>0ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>TimeSlot → Selected variant</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-booking"></div>Session Booking</div></td>
+          <td>"Book Session" button</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Dissolve</span></td>
+          <td>250ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Confirmation Overlay (modal)</span></td>
+        </tr>
+        <tr>
+          <td><div class="td-screen"><div class="td-screen-dot dot-booking"></div>Conf. Overlay</div></td>
+          <td>"Return to Dashboard" button</td>
+          <td><span class="td-trigger">On Click</span></td>
+          <td><span class="td-anim">Smart Animate</span></td>
+          <td>300ms</td>
+          <td><span class="td-dest"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Wellness Dashboard (118-2)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
