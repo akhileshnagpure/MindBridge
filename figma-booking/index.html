@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge – Therapist Session Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────── */
+    :root {
+      --background-main:     #F4F6F5;
+      --background-card:     #FFFFFF;
+      --primary-teal:        #4A9E8E;
+      --primary-teal-soft:   #E6F4F1;
+      --primary-teal-dark:   #357A6C;
+      --primary-teal-bright: #5BBCAA;
+      --text-primary:        #1A2B28;
+      --text-secondary:      #5A7066;
+      --text-muted:          #9AB5AE;
+      --text-inverse:        #FFFFFF;
+      --success:             #3DAA6B;
+      --success-soft:        #E6F7EE;
+      --warning-amber:       #E8A838;
+      --warning-soft:        #FDF3E0;
+      --border:              #DDE8E5;
+      --border-focus:        #4A9E8E;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-full: 9999px;
+      --shadow-card: 0 1px 3px rgba(26,43,40,0.06), 0 4px 12px rgba(26,43,40,0.04);
+      --shadow-hover: 0 4px 20px rgba(74,158,142,0.16);
+    }
+
+    /* ─── RESET ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1440px;
+      height: 900px;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      background: var(--background-main);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SHELL ──────────────────────────────────────── */
+    .app-shell { display: flex; width: 1440px; height: 900px; }
+
+    /* ═══════════════════════════════════════════════════
+       SIDEBAR NAVIGATION
+    ═══════════════════════════════════════════════════ */
+    .sidebar {
+      width: 240px; height: 900px;
+      background: var(--background-card);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .logo-text { font-size: 16px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.3px; }
+    .logo-text span { color: var(--primary-teal); }
+
+    .sidebar-nav {
+      flex: 1; display: flex; flex-direction: column;
+      gap: 2px; padding: 16px 12px; overflow-y: auto;
+    }
+    .nav-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); padding: 10px 12px 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none;
+      transition: all 0.15s;
+    }
+    .nav-item svg {
+      width: 18px; height: 18px; stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+    .nav-item:hover { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .nav-item.active { background: var(--primary-teal-soft); color: var(--primary-teal); font-weight: 700; }
+    .nav-badge {
+      margin-left: auto; background: var(--primary-teal);
+      color: #fff; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: var(--radius-full);
+    }
+    .sidebar-footer {
+      border-top: 1px solid var(--border); padding: 14px 12px;
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer;
+    }
+    .sidebar-user:hover { background: var(--primary-teal-soft); }
+    .avatar-xs {
+      width: 32px; height: 32px; border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #A8D8CF, var(--primary-teal));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+    }
+    .sidebar-user-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .sidebar-user-role { font-size: 11px; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════════════
+       MAIN AREA
+    ═══════════════════════════════════════════════════ */
+    .main-area { flex: 1; display: flex; flex-direction: column; height: 900px; overflow: hidden; }
+
+    /* ═══════════════════════════════════════════════════
+       TOP NAVIGATION
+    ═══════════════════════════════════════════════════ */
+    .top-nav {
+      height: 72px;
+      background: var(--background-card);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; flex-shrink: 0;
+    }
+    .top-nav-left { display: flex; flex-direction: column; gap: 1px; }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+    }
+    .breadcrumb span { color: var(--primary-teal); }
+    .breadcrumb svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .page-title { font-size: 20px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.3px; }
+    .top-nav-right { display: flex; align-items: center; gap: 12px; }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-secondary); position: relative;
+    }
+    .icon-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-btn:hover { background: var(--primary-teal-soft); border-color: var(--primary-teal); color: var(--primary-teal); }
+    .notif-dot { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; background: var(--warning-amber); border-radius: 50%; border: 2px solid #fff; }
+    .profile-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 14px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); background: var(--background-main); cursor: pointer;
+    }
+    .profile-pill:hover { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .avatar-md {
+      width: 36px; height: 36px; border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #A8D8CF, var(--primary-teal));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: #fff;
+    }
+    .profile-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .profile-email { font-size: 11px; color: var(--text-muted); }
+    .chevron svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ─── SCROLL WRAPPER ─────────────────────────────── */
+    .content-scroll { flex: 1; overflow-y: auto; background: var(--background-main); }
+    .content-scroll::-webkit-scrollbar { width: 5px; }
+    .content-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ═══════════════════════════════════════════════════
+       SESSION BOOKING CONTENT
+    ═══════════════════════════════════════════════════ */
+    .booking-content {
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ─── CARD ───────────────────────────────────────── */
+    .card {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+    .card-title {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
+    }
+    .card-title svg { width: 16px; height: 16px; stroke: var(--primary-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+
+    /* ─── BADGE ──────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 700;
+    }
+    .badge-teal  { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .badge-green { background: var(--success-soft); color: var(--success); }
+    .badge-amber { background: var(--warning-soft); color: var(--warning-amber); }
+    .badge-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+
+    /* ─── BUTTONS ────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px;
+      padding: 9px 18px; border-radius: var(--radius-sm);
+      border: none; cursor: pointer; transition: all 0.18s; letter-spacing: 0.1px;
+    }
+    .btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-primary { background: var(--primary-teal); color: #fff; }
+    .btn-primary:hover { background: var(--primary-teal-dark); box-shadow: var(--shadow-hover); }
+    .btn-secondary { background: transparent; color: var(--primary-teal); border: 1.5px solid var(--primary-teal); }
+    .btn-secondary:hover { background: var(--primary-teal-soft); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { background: var(--background-main); border-color: var(--primary-teal); color: var(--primary-teal); }
+    .btn-ghost-selected { background: var(--primary-teal); color: #fff; border: 1.5px solid var(--primary-teal); }
+    .btn-sm { font-size: 12px; padding: 7px 14px; }
+
+    /* ═══════════════════════════════════════════════════
+       THERAPIST PROFILE CARD
+    ═══════════════════════════════════════════════════ */
+    .therapist-profile {
+      display: flex; align-items: flex-start; gap: 20px;
+    }
+    .therapist-avatar {
+      width: 72px; height: 72px; border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #C8E6E2, var(--primary-teal-soft));
+      border: 3px solid var(--primary-teal-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: var(--primary-teal);
+      flex-shrink: 0; position: relative;
+    }
+    .online-dot {
+      position: absolute; bottom: 3px; right: 3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--success); border: 2px solid #fff;
+    }
+    .therapist-info { flex: 1; }
+    .therapist-name { font-size: 18px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.2px; }
+    .therapist-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin: 2px 0 10px; }
+    .therapist-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .rating-row {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 700; color: var(--text-primary);
+    }
+    .stars { color: var(--warning-amber); font-size: 13px; }
+    .reviews { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .therapist-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .therapist-lang { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .therapist-lang svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .therapist-right {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+    }
+    .therapist-stat-grid { display: flex; gap: 12px; }
+    .therapist-stat {
+      text-align: center; padding: 10px 16px;
+      background: var(--background-main); border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .therapist-stat-val { font-size: 16px; font-weight: 800; color: var(--text-primary); }
+    .therapist-stat-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+
+    /* ═══════════════════════════════════════════════════
+       TWO-COLUMN LAYOUT
+    ═══════════════════════════════════════════════════ */
+    .two-col { display: flex; gap: 24px; align-items: flex-start; }
+    .col-main { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+    .col-side { flex: 0 0 300px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ═══════════════════════════════════════════════════
+       CALENDAR DATE PICKER
+    ═══════════════════════════════════════════════════ */
+    .calendar-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .calendar-month { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+    .cal-nav-btn {
+      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-secondary);
+    }
+    .cal-nav-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cal-nav-btn:hover { background: var(--primary-teal-soft); border-color: var(--primary-teal); color: var(--primary-teal); }
+
+    .weekday-row {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 6px; margin-bottom: 6px;
+    }
+    .weekday-label {
+      text-align: center; font-size: 11px; font-weight: 700;
+      color: var(--text-muted); padding: 4px 0;
+    }
+    .date-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .date-cell {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 8px 4px; border-radius: var(--radius-sm);
+      cursor: pointer; border: 1.5px solid transparent;
+      transition: all 0.15s; min-height: 48px;
+    }
+    .date-cell:hover { background: var(--primary-teal-soft); border-color: var(--primary-teal); }
+    .date-cell.selected { background: var(--primary-teal); border-color: var(--primary-teal); }
+    .date-cell.today { border-color: var(--primary-teal); }
+    .date-cell.past { opacity: 0.4; cursor: default; pointer-events: none; }
+    .date-cell.available .date-dot { display: block; }
+    .date-num { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .date-cell.selected .date-num { color: #fff; }
+    .date-cell.today .date-num { color: var(--primary-teal); }
+    .date-cell.past .date-num { color: var(--text-muted); }
+    .date-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--primary-teal); margin-top: 3px; display: none; }
+    .date-cell.available .date-dot { display: block; }
+    .date-cell.selected .date-dot { background: rgba(255,255,255,0.6); }
+
+    /* ═══════════════════════════════════════════════════
+       TIME SLOT GRID
+    ═══════════════════════════════════════════════════ */
+    .time-group { margin-bottom: 16px; }
+    .time-group:last-child { margin-bottom: 0; }
+    .time-group-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
+    }
+    .time-group-label svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .time-slots { display: flex; gap: 8px; flex-wrap: wrap; }
+    .time-slot {
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: transparent; font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .time-slot:hover { border-color: var(--primary-teal); background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .time-slot.selected { background: var(--primary-teal); border-color: var(--primary-teal); color: #fff; }
+    .time-slot.unavailable { opacity: 0.4; cursor: default; pointer-events: none; text-decoration: line-through; }
+
+    /* ═══════════════════════════════════════════════════
+       SESSION TYPE SELECTOR
+    ═══════════════════════════════════════════════════ */
+    .session-type-grid { display: flex; gap: 12px; }
+    .session-type-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      padding: 16px 12px; border-radius: var(--radius-md);
+      border: 2px solid var(--border); background: transparent;
+      cursor: pointer; transition: all 0.18s;
+      font-family: 'Nunito', sans-serif;
+    }
+    .session-type-btn svg { width: 22px; height: 22px; stroke: var(--text-secondary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .session-type-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+    .session-type-sublabel { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+    .session-type-btn:hover { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .session-type-btn:hover svg, .session-type-btn:hover .session-type-label { stroke: var(--primary-teal); color: var(--primary-teal); }
+    .session-type-btn.selected { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .session-type-btn.selected svg { stroke: var(--primary-teal); }
+    .session-type-btn.selected .session-type-label { color: var(--primary-teal); }
+    .session-type-check {
+      width: 18px; height: 18px; background: var(--primary-teal);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .session-type-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ═══════════════════════════════════════════════════
+       BOOKING SUMMARY CARD
+    ═══════════════════════════════════════════════════ */
+    .summary-card { background: var(--background-card); border-radius: var(--radius-md); padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow-card); }
+    .summary-header {
+      display: flex; align-items: center; gap: 10px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+    }
+    .summary-avatar {
+      width: 44px; height: 44px; border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #C8E6E2, var(--primary-teal-soft));
+      border: 2px solid var(--primary-teal-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800; color: var(--primary-teal);
+    }
+    .summary-therapist-name { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+    .summary-therapist-spec { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .summary-rows { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+    .summary-row { display: flex; align-items: center; justify-content: space-between; }
+    .summary-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .summary-label svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .summary-value { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .summary-divider { height: 1px; background: var(--border); margin: 4px 0; }
+    .summary-total { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .summary-total-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+    .summary-total-val { font-size: 18px; font-weight: 800; color: var(--text-primary); }
+    .summary-note { font-size: 11px; font-weight: 500; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+    /* Progress bar */
+    .progress-track { height: 6px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-bright)); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════════════════════════════════════
+       SIDEBAR NAVIGATION
+  ═══════════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <span class="logo-text">Mind<span>Bridge</span></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Check-In
+        <span class="nav-badge">Today</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        My Journey
+      </a>
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Sessions
+      </a>
+      <div class="nav-label" style="margin-top:8px;">Account</div>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar-xs">PS</div>
+        <div>
+          <div class="sidebar-user-name">Priya Sharma</div>
+          <div class="sidebar-user-role">Patient</div>
+        </div>
+        <svg style="margin-left:auto;width:14px;height:14px;stroke:#9AB5AE;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════
+       MAIN AREA
+  ═══════════════════════════════════════════════════ -->
+  <div class="main-area">
+
+    <!-- TOP NAVIGATION -->
+    <header class="top-nav">
+      <div class="top-nav-left">
+        <div class="breadcrumb">
+          Sessions
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Therapist Session Booking</span>
+        </div>
+        <div class="page-title">Therapist Session Booking</div>
+      </div>
+      <div class="top-nav-right">
+        <button class="icon-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <div class="profile-pill">
+          <div class="avatar-md">PS</div>
+          <div>
+            <div class="profile-name">Priya Sharma</div>
+            <div class="profile-email">priya.sharma@techcorp.com</div>
+          </div>
+          <div class="chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content-scroll">
+      <div class="booking-content">
+
+        <!-- ─── THERAPIST PROFILE CARD ───────────────────── -->
+        <div class="card">
+          <div class="therapist-profile">
+            <!-- Avatar -->
+            <div class="therapist-avatar">
+              EC
+              <div class="online-dot"></div>
+            </div>
+
+            <!-- Info -->
+            <div class="therapist-info">
+              <div class="therapist-name">Dr. Emily Carter</div>
+              <div class="therapist-title">Licensed Clinical Psychologist · 9 years experience</div>
+              <div class="therapist-meta">
+                <div class="rating-row">
+                  <span class="stars">★★★★★</span>
+                  <span>4.8</span>
+                  <span class="reviews">(124 reviews)</span>
+                </div>
+                <span class="badge badge-green">Available</span>
+              </div>
+              <div class="therapist-tags">
+                <span class="badge badge-teal">Anxiety</span>
+                <span class="badge badge-teal">Stress Management</span>
+                <span class="badge badge-outline">CBT</span>
+                <span class="badge badge-outline">Mindfulness</span>
+              </div>
+              <div class="therapist-lang">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                English, Spanish
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="therapist-right">
+              <div class="therapist-stat-grid">
+                <div class="therapist-stat">
+                  <div class="therapist-stat-val">9 yrs</div>
+                  <div class="therapist-stat-label">Experience</div>
+                </div>
+                <div class="therapist-stat">
+                  <div class="therapist-stat-val">350+</div>
+                  <div class="therapist-stat-label">Sessions</div>
+                </div>
+                <div class="therapist-stat">
+                  <div class="therapist-stat-val">98%</div>
+                  <div class="therapist-stat-label">Satisfaction</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-secondary btn-sm">
+                  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Message
+                </button>
+                <button class="btn btn-ghost btn-sm">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                  View Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BOOKING FORM + SUMMARY ROW ──────────────── -->
+        <div class="two-col">
+
+          <!-- LEFT: Booking form -->
+          <div class="col-main">
+
+            <!-- SESSION TYPE SELECTOR -->
+            <div class="card">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Session Type
+              </div>
+              <div class="session-type-grid">
+
+                <!-- Video Call — selected -->
+                <div class="session-type-btn selected">
+                  <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  <div class="session-type-label">Video Call</div>
+                  <div class="session-type-sublabel">Face-to-face</div>
+                  <div class="session-type-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </div>
+
+                <!-- Audio Call -->
+                <div class="session-type-btn">
+                  <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <div class="session-type-label">Audio Call</div>
+                  <div class="session-type-sublabel">Voice only</div>
+                </div>
+
+                <!-- Chat -->
+                <div class="session-type-btn">
+                  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <div class="session-type-label">Chat</div>
+                  <div class="session-type-sublabel">Text-based</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- CALENDAR DATE PICKER -->
+            <div class="card">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Select Appointment Date
+              </div>
+
+              <div class="calendar-nav">
+                <button class="cal-nav-btn">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span class="calendar-month">March 2026</span>
+                <button class="cal-nav-btn">
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+
+              <!-- Weekday headers -->
+              <div class="weekday-row">
+                <div class="weekday-label">Mon</div>
+                <div class="weekday-label">Tue</div>
+                <div class="weekday-label">Wed</div>
+                <div class="weekday-label">Thu</div>
+                <div class="weekday-label">Fri</div>
+                <div class="weekday-label">Sat</div>
+                <div class="weekday-label">Sun</div>
+              </div>
+
+              <!-- Dates grid — March 2026 starts on Sunday, offset -->
+              <div class="date-grid">
+                <!-- Week 1 (Mar 1 = Sunday) -->
+                <div class="date-cell past"><span class="date-num">24</span></div>
+                <div class="date-cell past"><span class="date-num">25</span></div>
+                <div class="date-cell past"><span class="date-num">26</span></div>
+                <div class="date-cell past"><span class="date-num">27</span></div>
+                <div class="date-cell past"><span class="date-num">28</span></div>
+                <div class="date-cell past"><span class="date-num">1</span></div>
+                <div class="date-cell past"><span class="date-num">2</span></div>
+                <!-- Week 2 -->
+                <div class="date-cell past"><span class="date-num">3</span></div>
+                <div class="date-cell past"><span class="date-num">4</span></div>
+                <div class="date-cell past"><span class="date-num">5</span></div>
+                <div class="date-cell past"><span class="date-num">6</span></div>
+                <div class="date-cell past"><span class="date-num">7</span></div>
+                <div class="date-cell past"><span class="date-num">8</span></div>
+                <div class="date-cell past"><span class="date-num">9</span></div>
+                <!-- Week 3 -->
+                <div class="date-cell past"><span class="date-num">10</span></div>
+                <div class="date-cell past"><span class="date-num">11</span></div>
+                <div class="date-cell past"><span class="date-num">12</span></div>
+                <div class="date-cell today available"><span class="date-num">13</span><div class="date-dot"></div></div>
+                <div class="date-cell available"><span class="date-num">14</span><div class="date-dot"></div></div>
+                <div class="date-cell selected available"><span class="date-num">15</span><div class="date-dot"></div></div>
+                <div class="date-cell"><span class="date-num">16</span></div>
+                <!-- Week 4 -->
+                <div class="date-cell available"><span class="date-num">17</span><div class="date-dot"></div></div>
+                <div class="date-cell available"><span class="date-num">18</span><div class="date-dot"></div></div>
+                <div class="date-cell available"><span class="date-num">19</span><div class="date-dot"></div></div>
+                <div class="date-cell available"><span class="date-num">20</span><div class="date-dot"></div></div>
+                <div class="date-cell available"><span class="date-num">21</span><div class="date-dot"></div></div>
+                <div class="date-cell"><span class="date-num">22</span></div>
+                <div class="date-cell"><span class="date-num">23</span></div>
+              </div>
+
+              <!-- Legend -->
+              <div style="display:flex;gap:16px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--text-muted);">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary-teal);"></div> Available
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--text-muted);">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary-teal);opacity:0.3;"></div> Unavailable
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--primary-teal);">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary-teal);border:2px solid white;box-shadow:0 0 0 1.5px var(--primary-teal);"></div> Selected
+                </div>
+              </div>
+            </div>
+
+            <!-- AVAILABLE TIME SLOTS -->
+            <div class="card">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Available Time Slots
+                <span style="margin-left:auto;" class="badge badge-teal">March 15</span>
+              </div>
+
+              <!-- Morning -->
+              <div class="time-group">
+                <div class="time-group-label">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  Morning
+                </div>
+                <div class="time-slots">
+                  <button class="time-slot unavailable">9:00 AM</button>
+                  <button class="time-slot">10:00 AM</button>
+                  <button class="time-slot">11:00 AM</button>
+                </div>
+              </div>
+
+              <!-- Afternoon -->
+              <div class="time-group">
+                <div class="time-group-label">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  Afternoon
+                </div>
+                <div class="time-slots">
+                  <button class="time-slot">1:00 PM</button>
+                  <button class="time-slot">2:00 PM</button>
+                  <button class="time-slot selected">3:00 PM</button>
+                </div>
+              </div>
+
+              <!-- Evening -->
+              <div class="time-group">
+                <div class="time-group-label">
+                  <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  Evening
+                </div>
+                <div class="time-slots">
+                  <button class="time-slot">5:00 PM</button>
+                  <button class="time-slot">6:00 PM</button>
+                  <button class="time-slot">7:00 PM</button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /col-main -->
+
+          <!-- RIGHT: Booking Summary -->
+          <div class="col-side">
+
+            <!-- BOOKING SUMMARY CARD -->
+            <div class="summary-card">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Session Summary
+              </div>
+
+              <!-- Therapist mini-header -->
+              <div class="summary-header">
+                <div class="summary-avatar">EC</div>
+                <div>
+                  <div class="summary-therapist-name">Dr. Emily Carter</div>
+                  <div class="summary-therapist-spec">Anxiety Therapy</div>
+                </div>
+                <div style="margin-left:auto;"><span class="badge badge-green">Confirmed</span></div>
+              </div>
+
+              <!-- Summary rows -->
+              <div class="summary-rows">
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Date
+                  </div>
+                  <div class="summary-value">Saturday, March 15</div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Time
+                  </div>
+                  <div class="summary-value">3:00 PM – 4:00 PM</div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    Session Type
+                  </div>
+                  <div class="summary-value">Video Call</div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Duration
+                  </div>
+                  <div class="summary-value">60 minutes</div>
+                </div>
+              </div>
+
+              <div class="summary-divider"></div>
+              <div class="summary-total">
+                <div class="summary-total-label">Session Fee</div>
+                <div class="summary-total-val">$85.00</div>
+              </div>
+              <div class="summary-divider"></div>
+
+              <!-- CTA -->
+              <button class="btn btn-primary" style="width:100%;margin-top:16px;padding:13px;">
+                <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Book Session
+              </button>
+              <button class="btn btn-ghost" style="width:100%;margin-top:8px;">
+                Save for Later
+              </button>
+              <div class="summary-note">
+                Free cancellation up to 24 hours before your session.
+              </div>
+            </div>
+
+            <!-- Prep checklist card -->
+            <div class="card" style="padding:20px;">
+              <div class="card-title" style="margin-bottom:14px;">
+                <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Before Your Session
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:var(--success-soft);border:1.5px solid var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3DAA6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span style="font-size:13px;font-weight:600;color:var(--text-secondary);">Profile completed</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:var(--success-soft);border:1.5px solid var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3DAA6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span style="font-size:13px;font-weight:600;color:var(--text-secondary);">Intake form submitted</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:var(--warning-soft);border:1.5px solid var(--warning-amber);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8A838" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </div>
+                  <span style="font-size:13px;font-weight:600;color:var(--text-secondary);">Pre-session notes pending</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:var(--border);border:1.5px solid var(--border);flex-shrink:0;"></div>
+                  <span style="font-size:13px;font-weight:600;color:var(--text-muted);">Payment confirmed</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /col-side -->
+        </div><!-- /two-col -->
+
+      </div><!-- /booking-content -->
+    </div><!-- /content-scroll -->
+
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+</body>
+</html>

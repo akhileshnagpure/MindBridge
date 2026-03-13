@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/akhilesh.nagpure/Documents/MindBridge -maxdepth 2 -type f \\\\\\( -name \"*.json\" -o -name \"*.md\" \\\\\\) 2>/dev/null | head -20)",
+      "Bash(find /c/Users/akhilesh.nagpure/.claude -name \"*.json\" -type f | xargs grep -l \"mcp\\\\|figma\" 2>/dev/null)",
+      "WebFetch(domain:www.figma.com)",
+      "mcp__figma-desktop__get_design_context",
+      "mcp__figma-desktop__get_screenshot"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "figma"
+  ]
+}

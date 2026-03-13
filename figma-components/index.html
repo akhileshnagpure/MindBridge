@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge – Component Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --background-main:     #F4F6F5;
+      --background-card:     #FFFFFF;
+      --background-soft:     #EEF2F1;
+      --primary-teal:        #4A9E8E;
+      --primary-teal-soft:   #E6F4F1;
+      --primary-teal-dark:   #357A6C;
+      --primary-teal-bright: #5BBCAA;
+      --text-primary:        #1A2B28;
+      --text-secondary:      #5A7066;
+      --text-muted:          #9AB5AE;
+      --text-inverse:        #FFFFFF;
+      --success:             #3DAA6B;
+      --success-soft:        #E6F7EE;
+      --warning-amber:       #E8A838;
+      --warning-soft:        #FDF3E0;
+      --border:              #DDE8E5;
+      --border-subtle:       #EEF2F1;
+      --border-focus:        #4A9E8E;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-full: 9999px;
+      --shadow-card: 0 1px 3px rgba(26,43,40,0.06), 0 4px 12px rgba(26,43,40,0.04);
+      --shadow-focus: 0 0 0 3px rgba(74,158,142,0.2);
+    }
+
+    /* ─── RESET ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Nunito', sans-serif;
+      background: #E8ECEB;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      padding: 48px;
+      min-width: 1440px;
+    }
+
+    /* ─── PAGE HEADER ───────────────────────── */
+    .page-header {
+      margin-bottom: 48px;
+    }
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary-teal-soft); color: var(--primary-teal);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 4px 12px; border-radius: var(--radius-full);
+      margin-bottom: 12px;
+    }
+    .page-eyebrow svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .page-h1 { font-size: 32px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; margin-bottom: 6px; }
+    .page-sub { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+
+    /* ─── SECTION ───────────────────────────── */
+    .section {
+      background: var(--background-card);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 36px; height: 36px;
+      background: var(--primary-teal-soft);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .section-icon svg { width: 18px; height: 18px; stroke: var(--primary-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .section-title { font-size: 17px; font-weight: 800; color: var(--text-primary); }
+    .section-sub { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+    .section-tag {
+      margin-left: auto; font-size: 11px; font-weight: 700;
+      background: var(--background-soft); color: var(--text-muted);
+      padding: 3px 10px; border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+    }
+
+    /* ─── COMPONENT ROW ─────────────────────── */
+    .comp-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+    .comp-col { display: flex; flex-direction: column; gap: 10px; }
+    .comp-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* ─── DIVIDER ───────────────────────────── */
+    .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+    /* ─── STATE LABEL ───────────────────────── */
+    .state-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--text-muted); background: var(--background-soft);
+      border: 1px solid var(--border); padding: 2px 8px;
+      border-radius: var(--radius-full); margin-bottom: 6px;
+    }
+    .state-col { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+
+    /* ═══════════════════════════════════════════
+       1. BUTTON COMPONENT
+    ═══════════════════════════════════════════ */
+
+    /* Base */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px;
+      padding: 12px 20px; border-radius: var(--radius-sm);
+      border: none; cursor: pointer; transition: all 0.18s;
+      outline: none; letter-spacing: 0.1px;
+    }
+    .btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Primary / Default */
+    .btn-primary          { background: var(--primary-teal); color: #fff; }
+    /* Primary / Hover */
+    .btn-primary-hover    { background: var(--primary-teal-dark); color: #fff; box-shadow: 0 4px 16px rgba(74,158,142,0.3); }
+    /* Primary / Focus */
+    .btn-primary-focus    { background: var(--primary-teal); color: #fff; box-shadow: var(--shadow-focus); outline: 2px solid var(--primary-teal); outline-offset: 2px; }
+    /* Primary / Disabled */
+    .btn-primary-disabled { background: #C8D8D5; color: #8FABA6; cursor: not-allowed; }
+
+    /* Secondary / Default */
+    .btn-secondary          { background: transparent; color: var(--primary-teal); border: 1.5px solid var(--primary-teal); }
+    /* Secondary / Hover */
+    .btn-secondary-hover    { background: var(--primary-teal-soft); color: var(--primary-teal); border: 1.5px solid var(--primary-teal); }
+    /* Secondary / Focus */
+    .btn-secondary-focus    { background: var(--primary-teal-soft); color: var(--primary-teal); border: 1.5px solid var(--primary-teal); box-shadow: var(--shadow-focus); }
+    /* Secondary / Disabled */
+    .btn-secondary-disabled { background: transparent; color: #C8D8D5; border: 1.5px solid #C8D8D5; cursor: not-allowed; }
+
+    /* Ghost / Default */
+    .btn-ghost          { background: transparent; color: var(--text-secondary); border: 1.5px solid var(--border); }
+    /* Ghost / Hover */
+    .btn-ghost-hover    { background: var(--background-soft); color: var(--text-primary); border: 1.5px solid var(--border); }
+    /* Ghost / Focus */
+    .btn-ghost-focus    { background: var(--background-soft); color: var(--text-primary); border: 1.5px solid var(--primary-teal); box-shadow: var(--shadow-focus); }
+    /* Ghost / Disabled */
+    .btn-ghost-disabled { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border-subtle); cursor: not-allowed; }
+
+    /* ═══════════════════════════════════════════
+       2. INPUT FIELD
+    ═══════════════════════════════════════════ */
+    .input-group { display: flex; flex-direction: column; gap: 6px; width: 240px; }
+    .input-label { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .input-field {
+      height: 40px; padding: 0 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-subtle);
+      background: var(--background-card);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 500; color: var(--text-primary);
+      outline: none; width: 100%;
+      display: flex; align-items: center;
+    }
+    .input-helper { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+    .input-field-default  { border-color: var(--border-subtle); }
+    .input-field-focused  { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+    .input-field-error    { border-color: var(--warning-amber); box-shadow: 0 0 0 3px rgba(232,168,56,0.15); }
+    .input-field-disabled { background: var(--background-soft); color: var(--text-muted); border-color: var(--border-subtle); cursor: not-allowed; }
+
+    .input-helper-error   { color: var(--warning-amber); }
+
+    /* With icon */
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-icon {
+      position: absolute; left: 12px; width: 16px; height: 16px;
+      stroke: var(--text-muted); fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none;
+    }
+    .input-with-icon { padding-left: 38px; }
+
+    /* ═══════════════════════════════════════════
+       3. TEXTAREA
+    ═══════════════════════════════════════════ */
+    .textarea-group { display: flex; flex-direction: column; gap: 6px; width: 320px; }
+    .textarea-wrap {
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden; background: var(--background-card);
+    }
+    .textarea-wrap-focused { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+    .textarea-wrap-error   { border-color: var(--warning-amber); box-shadow: 0 0 0 3px rgba(232,168,56,0.15); }
+    .textarea-inner {
+      width: 100%; padding: 12px; resize: none; border: none; outline: none;
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 500;
+      color: var(--text-primary); background: transparent;
+      min-height: 88px; line-height: 1.6;
+    }
+    .textarea-inner::placeholder { color: var(--text-muted); }
+    .textarea-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 12px; border-top: 1px solid var(--border);
+      background: var(--background-soft);
+    }
+    .char-count { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       4. DROPDOWN
+    ═══════════════════════════════════════════ */
+    .dropdown-group { display: flex; flex-direction: column; gap: 6px; width: 220px; }
+    .dropdown-field {
+      height: 40px; padding: 0 36px 0 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-subtle);
+      background: var(--background-card);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 600; color: var(--text-primary);
+      appearance: none; cursor: pointer; outline: none; width: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AB5AE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    .dropdown-default   { border-color: var(--border-subtle); }
+    .dropdown-hover     { border-color: var(--primary-teal); background-color: var(--primary-teal-soft); }
+    .dropdown-focused   { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+    .dropdown-disabled  { background-color: var(--background-soft); color: var(--text-muted); cursor: not-allowed; opacity: 0.6; }
+
+    /* ═══════════════════════════════════════════
+       5. CARD COMPONENT
+    ═══════════════════════════════════════════ */
+    .card-default {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      width: 260px;
+    }
+    .card-interactive {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 2px solid var(--primary-teal);
+      box-shadow: 0 4px 20px rgba(74,158,142,0.14);
+      width: 260px;
+      cursor: pointer;
+    }
+    .card-stat {
+      background: var(--background-card);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      width: 200px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .card-title-text { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .card-body-text  { font-size: 13px; font-weight: 500; color: var(--text-secondary); line-height: 1.5; }
+    .card-stat-icon  {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: var(--primary-teal-soft);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-stat-icon svg { width: 20px; height: 20px; stroke: var(--primary-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .card-stat-val   { font-size: 20px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+    .card-stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+    .card-interactive-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700; color: var(--primary-teal);
+      margin-bottom: 8px;
+    }
+    .card-interactive-tag svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ═══════════════════════════════════════════
+       6. BADGE
+    ═══════════════════════════════════════════ */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 700;
+    }
+    .badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .badge-primary { background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .badge-neutral { background: var(--background-soft); color: var(--text-secondary); border: 1px solid var(--border); }
+    .badge-success { background: var(--success-soft); color: var(--success); }
+    .badge-amber   { background: var(--warning-soft); color: var(--warning-amber); }
+    .badge-lg { font-size: 13px; padding: 5px 14px; }
+    .badge-sm { font-size: 10px; padding: 3px 8px; }
+
+    /* ═══════════════════════════════════════════
+       7. PROGRESS BAR
+    ═══════════════════════════════════════════ */
+    .progress-demo { width: 280px; display: flex; flex-direction: column; gap: 14px; }
+    .progress-item { display: flex; flex-direction: column; gap: 6px; }
+    .progress-meta { display: flex; justify-content: space-between; align-items: center; }
+    .progress-name { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+    .progress-pct  { font-size: 12px; font-weight: 800; color: var(--primary-teal); }
+    .progress-track {
+      height: 8px; background: var(--background-soft);
+      border-radius: var(--radius-full); overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%; border-radius: var(--radius-full);
+      background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-bright));
+    }
+    .progress-fill-success { background: linear-gradient(90deg, var(--success), #5BCCA0); }
+    .progress-fill-amber   { background: linear-gradient(90deg, var(--warning-amber), #F0C070); }
+
+    /* ═══════════════════════════════════════════
+       8. MOOD ICONS
+    ═══════════════════════════════════════════ */
+    .mood-grid { display: flex; gap: 14px; flex-wrap: wrap; }
+    .mood-item {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 16px 14px; border-radius: var(--radius-md);
+      border: 2px solid var(--border); cursor: pointer;
+      transition: all 0.15s; min-width: 90px;
+      background: var(--background-main);
+    }
+    .mood-item:hover { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .mood-item.mood-selected { border-color: var(--primary-teal); background: var(--primary-teal-soft); box-shadow: 0 0 0 3px rgba(74,158,142,0.12); }
+    .mood-emoji { font-size: 28px; line-height: 1; }
+    .mood-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+    .mood-item.mood-selected .mood-label { color: var(--primary-teal); }
+    .mood-check {
+      width: 16px; height: 16px; background: var(--primary-teal);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .mood-check svg { width: 9px; height: 9px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ═══════════════════════════════════════════
+       9. TIME SLOT BUTTON
+    ═══════════════════════════════════════════ */
+    .time-slot {
+      padding: 9px 18px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: transparent; font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .time-slot-hover    { border-color: var(--primary-teal); background: var(--primary-teal-soft); color: var(--primary-teal); }
+    .time-slot-selected { background: var(--primary-teal); border-color: var(--primary-teal); color: #fff; }
+    .time-slot-disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+    /* ═══════════════════════════════════════════
+       10. CALENDAR DAY
+    ═══════════════════════════════════════════ */
+    .cal-grid { display: flex; gap: 8px; }
+    .cal-day {
+      width: 52px; height: 56px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: var(--radius-sm); border: 1.5px solid transparent;
+      cursor: pointer; transition: all 0.15s; gap: 4px;
+      background: var(--background-main);
+    }
+    .cal-day-name { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .cal-day-num  { font-size: 16px; font-weight: 800; color: var(--text-primary); }
+    .cal-day-dot  { width: 5px; height: 5px; border-radius: 50%; background: var(--primary-teal); }
+
+    .cal-day-default  { border-color: var(--border); }
+    .cal-day-hover    { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .cal-day-hover .cal-day-name,
+    .cal-day-hover .cal-day-num { color: var(--primary-teal); }
+    .cal-day-selected { border-color: var(--primary-teal); background: var(--primary-teal); }
+    .cal-day-selected .cal-day-name,
+    .cal-day-selected .cal-day-num { color: #fff; }
+    .cal-day-selected .cal-day-dot { background: rgba(255,255,255,0.7); }
+    .cal-day-today    { border-color: var(--primary-teal); }
+    .cal-day-today .cal-day-num { color: var(--primary-teal); }
+    .cal-day-disabled { opacity: 0.35; cursor: not-allowed; }
+    .cal-day-disabled .cal-day-num { color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       11. TYPOGRAPHY SCALE
+    ═══════════════════════════════════════════ */
+    .typo-row { display: flex; flex-direction: column; gap: 20px; }
+    .typo-item { display: flex; align-items: baseline; gap: 24px; }
+    .typo-meta { width: 160px; flex-shrink: 0; }
+    .typo-meta-name  { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .typo-meta-spec  { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+    .typo-page-title  { font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+    .typo-section-title { font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.3px; }
+    .typo-card-title  { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .typo-body        { font-size: 14px; font-weight: 500; color: var(--text-secondary); line-height: 1.6; }
+    .typo-caption     { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       12. COLOR SWATCHES
+    ═══════════════════════════════════════════ */
+    .swatch-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; flex-direction: column; gap: 8px;
+      width: 100px;
+    }
+    .swatch-color {
+      width: 100%; height: 64px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .swatch-name { font-size: 11px; font-weight: 700; color: var(--text-primary); }
+    .swatch-hex  { font-size: 10px; font-weight: 600; color: var(--text-muted); font-family: monospace; }
+
+    /* ═══════════════════════════════════════════
+       SESSION TYPE SELECTOR
+    ═══════════════════════════════════════════ */
+    .session-type-set { display: flex; gap: 12px; }
+    .sess-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      padding: 16px 20px; border-radius: var(--radius-md);
+      border: 2px solid var(--border); background: transparent;
+      cursor: pointer; min-width: 120px;
+      font-family: 'Nunito', sans-serif;
+    }
+    .sess-btn svg { width: 22px; height: 22px; stroke: var(--text-secondary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sess-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+    .sess-sub   { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+    .sess-btn-hover    { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .sess-btn-hover svg, .sess-btn-hover .sess-label { stroke: var(--primary-teal); color: var(--primary-teal); }
+    .sess-btn-selected { border-color: var(--primary-teal); background: var(--primary-teal-soft); }
+    .sess-btn-selected svg { stroke: var(--primary-teal); }
+    .sess-btn-selected .sess-label { color: var(--primary-teal); }
+    .sess-check { width: 18px; height: 18px; background: var(--primary-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .sess-check svg { width: 10px; height: 10px; stroke: #fff; stroke-width: 2.5; }
+
+    /* ─── GRID HELPER ───────────────────────── */
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .two-col   { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── PAGE HEADER ─────────────────────── -->
+  <div class="page-header">
+    <div class="page-eyebrow">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      MindBridge Design System
+    </div>
+    <h1 class="page-h1">Component Library</h1>
+    <p class="page-sub">All reusable components extracted from Daily Check-In · Wellness Dashboard · Therapist Session Booking screens. Nunito typeface · Token-based colors · ShadCN patterns · Lucide icons.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 — COLOR TOKENS
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+      <div>
+        <div class="section-title">Color Tokens</div>
+        <div class="section-sub">All colors used in the MindBridge design system</div>
+      </div>
+      <span class="section-tag">12 tokens</span>
+    </div>
+
+    <div class="comp-label">Primary & Teal Scale</div>
+    <div class="swatch-grid" style="margin-bottom:20px;">
+      <div class="swatch"><div class="swatch-color" style="background:#4A9E8E;"></div><div class="swatch-name">primary-teal</div><div class="swatch-hex">#4A9E8E</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#357A6C;"></div><div class="swatch-name">primary-teal-dark</div><div class="swatch-hex">#357A6C</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#5BBCAA;"></div><div class="swatch-name">primary-teal-bright</div><div class="swatch-hex">#5BBCAA</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#E6F4F1;border:1px solid #DDE8E5;"></div><div class="swatch-name">primary-teal-soft</div><div class="swatch-hex">#E6F4F1</div></div>
+    </div>
+
+    <div class="comp-label">Backgrounds & Surfaces</div>
+    <div class="swatch-grid" style="margin-bottom:20px;">
+      <div class="swatch"><div class="swatch-color" style="background:#F4F6F5;border:1px solid #DDE8E5;"></div><div class="swatch-name">background-main</div><div class="swatch-hex">#F4F6F5</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FFFFFF;border:1px solid #DDE8E5;"></div><div class="swatch-name">background-card</div><div class="swatch-hex">#FFFFFF</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EEF2F1;border:1px solid #DDE8E5;"></div><div class="swatch-name">background-soft</div><div class="swatch-hex">#EEF2F1</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#DDE8E5;border:1px solid #C8D8D5;"></div><div class="swatch-name">border</div><div class="swatch-hex">#DDE8E5</div></div>
+    </div>
+
+    <div class="comp-label">Text & Semantic</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#1A2B28;"></div><div class="swatch-name">text-primary</div><div class="swatch-hex">#1A2B28</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#5A7066;"></div><div class="swatch-name">text-secondary</div><div class="swatch-hex">#5A7066</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#9AB5AE;"></div><div class="swatch-name">text-muted</div><div class="swatch-hex">#9AB5AE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3DAA6B;"></div><div class="swatch-name">success</div><div class="swatch-hex">#3DAA6B</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#E8A838;"></div><div class="swatch-name">warning-amber</div><div class="swatch-hex">#E8A838</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 — TYPOGRAPHY
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+      <div>
+        <div class="section-title">Typography Scale</div>
+        <div class="section-sub">Nunito — 5-level hierarchy</div>
+      </div>
+      <span class="section-tag">Nunito · 5 styles</span>
+    </div>
+    <div class="typo-row">
+      <div class="typo-item">
+        <div class="typo-meta"><div class="typo-meta-name">Page Title</div><div class="typo-meta-spec">28px · 800 · −0.5px</div></div>
+        <div class="typo-page-title">How are you feeling today?</div>
+      </div>
+      <div class="typo-item">
+        <div class="typo-meta"><div class="typo-meta-name">Section Title</div><div class="typo-meta-spec">22px · 800 · −0.3px</div></div>
+        <div class="typo-section-title">Wellness Dashboard</div>
+      </div>
+      <div class="typo-item">
+        <div class="typo-meta"><div class="typo-meta-name">Card Title</div><div class="typo-meta-spec">16px · 700</div></div>
+        <div class="typo-card-title">Mood Trends — Last 14 Days</div>
+      </div>
+      <div class="typo-item">
+        <div class="typo-meta"><div class="typo-meta-name">Body</div><div class="typo-meta-spec">14px · 500 · 1.6lh</div></div>
+        <div class="typo-body">Your daily check-in helps you understand your emotional patterns over time.</div>
+      </div>
+      <div class="typo-item">
+        <div class="typo-meta"><div class="typo-meta-name">Caption</div><div class="typo-meta-spec">12px · 600</div></div>
+        <div class="typo-caption">0 / 500 characters · Free cancellation up to 24 hours before your session.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — BUTTON COMPONENT
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="4" ry="4"/></svg></div>
+      <div>
+        <div class="section-title">Button</div>
+        <div class="section-sub">Button / Primary · Secondary · Ghost — 4 states each</div>
+      </div>
+      <span class="section-tag">3 variants · 4 states</span>
+    </div>
+
+    <div class="three-col">
+
+      <!-- Primary -->
+      <div>
+        <div class="comp-label">Button / Primary</div>
+        <div class="comp-col">
+          <div class="state-col"><span class="state-tag">Default</span>
+            <button class="btn btn-primary"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Submit Check-In</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Hover</span>
+            <button class="btn btn-primary-hover"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Submit Check-In</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Focus</span>
+            <button class="btn btn-primary-focus"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Submit Check-In</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Disabled</span>
+            <button class="btn btn-primary-disabled" disabled>Submit Check-In</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary -->
+      <div>
+        <div class="comp-label">Button / Secondary</div>
+        <div class="comp-col">
+          <div class="state-col"><span class="state-tag">Default</span>
+            <button class="btn btn-secondary"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.83"/></svg>Reschedule</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Hover</span>
+            <button class="btn btn-secondary-hover"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.83"/></svg>Reschedule</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Focus</span>
+            <button class="btn btn-secondary-focus"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.83"/></svg>Reschedule</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Disabled</span>
+            <button class="btn btn-secondary-disabled" disabled>Reschedule</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ghost -->
+      <div>
+        <div class="comp-label">Button / Ghost</div>
+        <div class="comp-col">
+          <div class="state-col"><span class="state-tag">Default</span>
+            <button class="btn btn-ghost">Save for Later</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Hover</span>
+            <button class="btn btn-ghost-hover">Save for Later</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Focus</span>
+            <button class="btn btn-ghost-focus">Save for Later</button>
+          </div>
+          <div class="state-col"><span class="state-tag">Disabled</span>
+            <button class="btn btn-ghost-disabled" disabled>Save for Later</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — INPUT FIELD
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+      <div>
+        <div class="section-title">Input Field</div>
+        <div class="section-sub">Input / Default · Focused · Error · Disabled</div>
+      </div>
+      <span class="section-tag">4 states</span>
+    </div>
+
+    <div class="comp-row" style="gap:32px;">
+
+      <!-- Default -->
+      <div class="state-col">
+        <span class="state-tag">Default</span>
+        <div class="input-group">
+          <label class="input-label">Energy Level</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="input-field input-field-default input-with-icon">7 out of 10</div>
+          </div>
+          <span class="input-helper">Rate from 1 (low) to 10 (high)</span>
+        </div>
+      </div>
+
+      <!-- Focused -->
+      <div class="state-col">
+        <span class="state-tag">Focused</span>
+        <div class="input-group">
+          <label class="input-label">Energy Level</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="input-field input-field-focused input-with-icon">7 out of 10</div>
+          </div>
+          <span class="input-helper">Rate from 1 (low) to 10 (high)</span>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="state-col">
+        <span class="state-tag">Error</span>
+        <div class="input-group">
+          <label class="input-label">Energy Level</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="input-field input-field-error input-with-icon">—</div>
+          </div>
+          <span class="input-helper input-helper-error">This field is required</span>
+        </div>
+      </div>
+
+      <!-- Disabled -->
+      <div class="state-col">
+        <span class="state-tag">Disabled</span>
+        <div class="input-group">
+          <label class="input-label" style="color:var(--text-muted);">Energy Level</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="input-field input-field-disabled input-with-icon">Unavailable</div>
+          </div>
+          <span class="input-helper">Not editable</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5 — TEXTAREA
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div>
+        <div class="section-title">Textarea Field</div>
+        <div class="section-sub">Textarea / Default · Focused · Error — with character counter</div>
+      </div>
+      <span class="section-tag">3 states</span>
+    </div>
+
+    <div class="comp-row" style="gap:32px;align-items:flex-start;">
+
+      <!-- Default -->
+      <div class="state-col">
+        <span class="state-tag">Default</span>
+        <div class="textarea-group">
+          <label class="input-label">Journal Entry</label>
+          <div class="textarea-wrap">
+            <textarea class="textarea-inner" placeholder="Write about how you're feeling today..."></textarea>
+            <div class="textarea-footer">
+              <span class="char-count">0 / 500 characters</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AB5AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Focused -->
+      <div class="state-col">
+        <span class="state-tag">Focused</span>
+        <div class="textarea-group">
+          <label class="input-label">Journal Entry</label>
+          <div class="textarea-wrap textarea-wrap-focused">
+            <textarea class="textarea-inner">Feeling much more energized today after a good walk...</textarea>
+            <div class="textarea-footer">
+              <span class="char-count" style="color:var(--primary-teal);">54 / 500 characters</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A9E8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="state-col">
+        <span class="state-tag">Error</span>
+        <div class="textarea-group">
+          <label class="input-label">Journal Entry</label>
+          <div class="textarea-wrap textarea-wrap-error">
+            <textarea class="textarea-inner" placeholder="Write about how you're feeling today..."></textarea>
+            <div class="textarea-footer" style="background:var(--warning-soft);">
+              <span class="char-count" style="color:var(--warning-amber);">Please write at least 10 characters</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6 — DROPDOWN
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div>
+        <div class="section-title">Dropdown Select</div>
+        <div class="section-sub">Dropdown / Default · Hover · Focused · Disabled</div>
+      </div>
+      <span class="section-tag">4 states</span>
+    </div>
+
+    <div class="comp-row" style="gap:32px;align-items:flex-start;">
+      <div class="state-col"><span class="state-tag">Default</span>
+        <div class="dropdown-group">
+          <label class="input-label">Sleep Quality</label>
+          <select class="dropdown-field dropdown-default">
+            <option>Select quality…</option>
+            <option>Poor</option><option selected>Good</option><option>Excellent</option>
+          </select>
+        </div>
+      </div>
+      <div class="state-col"><span class="state-tag">Hover</span>
+        <div class="dropdown-group">
+          <label class="input-label">Sleep Quality</label>
+          <select class="dropdown-field dropdown-hover">
+            <option selected>Good</option>
+          </select>
+        </div>
+      </div>
+      <div class="state-col"><span class="state-tag">Focused</span>
+        <div class="dropdown-group">
+          <label class="input-label">Sleep Quality</label>
+          <select class="dropdown-field dropdown-focused">
+            <option selected>Good</option>
+          </select>
+        </div>
+      </div>
+      <div class="state-col"><span class="state-tag">Disabled</span>
+        <div class="dropdown-group">
+          <label class="input-label" style="color:var(--text-muted);">Sleep Quality</label>
+          <select class="dropdown-field dropdown-disabled" disabled>
+            <option>Unavailable</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 7 — CARD COMPONENT
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" ry="3"/></svg></div>
+      <div>
+        <div class="section-title">Card</div>
+        <div class="section-sub">Card / Default · Interactive · Stat</div>
+      </div>
+      <span class="section-tag">3 variants</span>
+    </div>
+
+    <div class="comp-row">
+
+      <!-- Default Card -->
+      <div>
+        <div class="state-tag" style="display:inline-block;margin-bottom:10px;">Card / Default</div>
+        <div class="card-default">
+          <div class="card-title-text">Journal Entry</div>
+          <div class="card-body-text">Write about how you're feeling today and track your emotional patterns over time.</div>
+        </div>
+      </div>
+
+      <!-- Interactive Card -->
+      <div>
+        <div class="state-tag" style="display:inline-block;margin-bottom:10px;">Card / Interactive</div>
+        <div class="card-interactive">
+          <div class="card-interactive-tag">
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Exercise
+          </div>
+          <div class="card-title-text">Breathing Exercise</div>
+          <div class="card-body-text">5 minute guided breathing to calm your mind.</div>
+        </div>
+      </div>
+
+      <!-- Stat Card -->
+      <div>
+        <div class="state-tag" style="display:inline-block;margin-bottom:10px;">Card / Stat</div>
+        <div class="card-stat">
+          <div class="card-stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          </div>
+          <div>
+            <div class="card-stat-val">14</div>
+            <div class="card-stat-label">Day Streak</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 8 — BADGE / TAG
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div>
+        <div class="section-title">Badge / Tag</div>
+        <div class="section-sub">Badge / Primary · Neutral · Success · Amber — 3 sizes</div>
+      </div>
+      <span class="section-tag">4 variants · 3 sizes</span>
+    </div>
+
+    <div class="comp-col" style="gap:20px;">
+      <div>
+        <div class="comp-label">Large</div>
+        <div class="comp-row">
+          <span class="badge badge-primary badge-lg"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Primary · Teal</span>
+          <span class="badge badge-neutral badge-lg">Neutral</span>
+          <span class="badge badge-success badge-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Success</span>
+          <span class="badge badge-amber badge-lg">Amber · Warning</span>
+        </div>
+      </div>
+      <div>
+        <div class="comp-label">Default</div>
+        <div class="comp-row">
+          <span class="badge badge-primary">Anxiety</span>
+          <span class="badge badge-primary">Stress Management</span>
+          <span class="badge badge-neutral">CBT</span>
+          <span class="badge badge-neutral">Mindfulness</span>
+          <span class="badge badge-success">Available</span>
+          <span class="badge badge-success">Confirmed</span>
+          <span class="badge badge-amber">Pending</span>
+        </div>
+      </div>
+      <div>
+        <div class="comp-label">Small</div>
+        <div class="comp-row">
+          <span class="badge badge-primary badge-sm">14 days</span>
+          <span class="badge badge-neutral badge-sm">Today</span>
+          <span class="badge badge-success badge-sm">↑ +0.3</span>
+          <span class="badge badge-amber badge-sm">Moderate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 9 — PROGRESS BAR
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div>
+        <div class="section-title">Progress Bar</div>
+        <div class="section-sub">Progress / Teal · Success · Amber — with label and percentage</div>
+      </div>
+      <span class="section-tag">3 fill styles</span>
+    </div>
+
+    <div class="progress-demo">
+      <div class="progress-item">
+        <div class="progress-meta">
+          <span class="progress-name">Exercises Completed</span>
+          <span class="progress-pct">80%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:80%;"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-meta">
+          <span class="progress-name">Mindfulness Minutes</span>
+          <span class="progress-pct" style="color:var(--success);">75%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill progress-fill-success" style="width:75%;"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-meta">
+          <span class="progress-name">Check-In Streak</span>
+          <span class="progress-pct" style="color:var(--warning-amber);">71%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill progress-fill-amber" style="width:71%;"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-meta">
+          <span class="progress-name">Pre-session Notes</span>
+          <span class="progress-pct">60%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 10 — MOOD ICONS
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+      <div>
+        <div class="section-title">Mood Icon Component Set</div>
+        <div class="section-sub">MoodIcon / Very Low · Low · Neutral · Good · Great — Default & Selected states</div>
+      </div>
+      <span class="section-tag">5 variants · 2 states</span>
+    </div>
+
+    <div class="comp-label" style="margin-bottom:12px;">Default State</div>
+    <div class="mood-grid" style="margin-bottom:24px;">
+      <div class="mood-item">
+        <div class="mood-emoji">😞</div>
+        <div class="mood-label">Very Low</div>
+      </div>
+      <div class="mood-item">
+        <div class="mood-emoji">😕</div>
+        <div class="mood-label">Low</div>
+      </div>
+      <div class="mood-item">
+        <div class="mood-emoji">😐</div>
+        <div class="mood-label">Neutral</div>
+      </div>
+      <div class="mood-item">
+        <div class="mood-emoji">🙂</div>
+        <div class="mood-label">Good</div>
+      </div>
+      <div class="mood-item">
+        <div class="mood-emoji">😄</div>
+        <div class="mood-label">Great</div>
+      </div>
+    </div>
+
+    <div class="comp-label" style="margin-bottom:12px;">Selected State (primary-teal-soft highlight)</div>
+    <div class="mood-grid">
+      <div class="mood-item mood-selected">
+        <div class="mood-emoji">😞</div>
+        <div class="mood-label">Very Low</div>
+        <div class="mood-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="mood-item mood-selected">
+        <div class="mood-emoji">😕</div>
+        <div class="mood-label">Low</div>
+        <div class="mood-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="mood-item mood-selected">
+        <div class="mood-emoji">😐</div>
+        <div class="mood-label">Neutral</div>
+        <div class="mood-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="mood-item mood-selected">
+        <div class="mood-emoji">🙂</div>
+        <div class="mood-label">Good</div>
+        <div class="mood-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="mood-item mood-selected">
+        <div class="mood-emoji">😄</div>
+        <div class="mood-label">Great</div>
+        <div class="mood-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 11 — TIME SLOT BUTTON
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div>
+        <div class="section-title">Time Slot Button</div>
+        <div class="section-sub">TimeSlot / Default · Hover · Selected · Disabled</div>
+      </div>
+      <span class="section-tag">4 states</span>
+    </div>
+
+    <div class="comp-row" style="gap:32px;align-items:flex-start;">
+      <div class="state-col"><span class="state-tag">Default</span><button class="time-slot">3:00 PM</button></div>
+      <div class="state-col"><span class="state-tag">Hover</span><button class="time-slot time-slot-hover">3:00 PM</button></div>
+      <div class="state-col"><span class="state-tag">Selected</span><button class="time-slot time-slot-selected">3:00 PM</button></div>
+      <div class="state-col"><span class="state-tag">Disabled</span><button class="time-slot time-slot-disabled">9:00 AM</button></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="comp-label">Time Slot Grid (in context)</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Morning</div>
+        <div style="display:flex;gap:8px;">
+          <button class="time-slot time-slot-disabled">9:00 AM</button>
+          <button class="time-slot">10:00 AM</button>
+          <button class="time-slot">11:00 AM</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Afternoon</div>
+        <div style="display:flex;gap:8px;">
+          <button class="time-slot">1:00 PM</button>
+          <button class="time-slot">2:00 PM</button>
+          <button class="time-slot time-slot-selected">3:00 PM</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Evening</div>
+        <div style="display:flex;gap:8px;">
+          <button class="time-slot">5:00 PM</button>
+          <button class="time-slot">6:00 PM</button>
+          <button class="time-slot">7:00 PM</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 12 — CALENDAR DAY
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div>
+        <div class="section-title">Calendar Day Item</div>
+        <div class="section-sub">CalendarDay / Default · Hover · Today · Selected · Disabled</div>
+      </div>
+      <span class="section-tag">5 states</span>
+    </div>
+
+    <div class="comp-row" style="gap:20px;align-items:flex-start;">
+      <div class="state-col"><span class="state-tag">Default</span>
+        <div class="cal-day cal-day-default"><span class="cal-day-name">Mon</span><span class="cal-day-num">11</span></div>
+      </div>
+      <div class="state-col"><span class="state-tag">Available</span>
+        <div class="cal-day cal-day-default"><span class="cal-day-name">Tue</span><span class="cal-day-num">12</span><div class="cal-day-dot"></div></div>
+      </div>
+      <div class="state-col"><span class="state-tag">Hover</span>
+        <div class="cal-day cal-day-hover"><span class="cal-day-name">Wed</span><span class="cal-day-num">13</span><div class="cal-day-dot"></div></div>
+      </div>
+      <div class="state-col"><span class="state-tag">Today</span>
+        <div class="cal-day cal-day-today"><span class="cal-day-name">Thu</span><span class="cal-day-num">13</span><div class="cal-day-dot"></div></div>
+      </div>
+      <div class="state-col"><span class="state-tag">Selected</span>
+        <div class="cal-day cal-day-selected"><span class="cal-day-name">Fri</span><span class="cal-day-num">15</span><div class="cal-day-dot"></div></div>
+      </div>
+      <div class="state-col"><span class="state-tag">Disabled</span>
+        <div class="cal-day cal-day-disabled"><span class="cal-day-name">Sat</span><span class="cal-day-num">9</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="comp-label">7-Day Week View (in context)</div>
+    <div class="cal-grid">
+      <div class="cal-day cal-day-disabled"><span class="cal-day-name">Mon</span><span class="cal-day-num">9</span></div>
+      <div class="cal-day cal-day-disabled"><span class="cal-day-name">Tue</span><span class="cal-day-num">10</span></div>
+      <div class="cal-day cal-day-disabled"><span class="cal-day-name">Wed</span><span class="cal-day-num">11</span></div>
+      <div class="cal-day cal-day-disabled"><span class="cal-day-name">Thu</span><span class="cal-day-num">12</span></div>
+      <div class="cal-day cal-day-today"><span class="cal-day-name">Fri</span><span class="cal-day-num">13</span><div class="cal-day-dot"></div></div>
+      <div class="cal-day cal-day-default"><span class="cal-day-name">Sat</span><span class="cal-day-num">14</span><div class="cal-day-dot"></div></div>
+      <div class="cal-day cal-day-selected"><span class="cal-day-name">Sun</span><span class="cal-day-num">15</span><div class="cal-day-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 13 — SESSION TYPE SELECTOR
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+      <div>
+        <div class="section-title">Session Type Selector</div>
+        <div class="section-sub">SessionType / Default · Selected — Video · Audio · Chat</div>
+      </div>
+      <span class="section-tag">3 types · 2 states</span>
+    </div>
+
+    <div class="comp-label" style="margin-bottom:12px;">Default State</div>
+    <div class="session-type-set" style="max-width:460px;margin-bottom:24px;">
+      <div class="sess-btn"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><div class="sess-label">Video Call</div><div class="sess-sub">Face-to-face</div></div>
+      <div class="sess-btn"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div class="sess-label">Audio Call</div><div class="sess-sub">Voice only</div></div>
+      <div class="sess-btn"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="sess-label">Chat</div><div class="sess-sub">Text-based</div></div>
+    </div>
+
+    <div class="comp-label" style="margin-bottom:12px;">Selected State</div>
+    <div class="session-type-set" style="max-width:460px;">
+      <div class="sess-btn sess-btn-selected"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><div class="sess-label">Video Call</div><div class="sess-sub">Face-to-face</div><div class="sess-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+      <div class="sess-btn"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div class="sess-label">Audio Call</div><div class="sess-sub">Voice only</div></div>
+      <div class="sess-btn"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="sess-label">Chat</div><div class="sess-sub">Text-based</div></div>
+    </div>
+  </div>
+
+</body>
+</html>

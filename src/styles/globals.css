@@ -1,0 +1,59 @@
+/* Generated with Claude Code assistance */
+/* MindBridge Design System – CSS Variable Tokens */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary – Soft Teal */
+  --primary:        #5FA8A4;
+  --primary-soft:   #E6F3F2;
+  --primary-dark:   #3D8480;
+  --primary-bright: #7CBFBC;
+
+  /* Backgrounds */
+  --background:     #F7F9F8;
+  --card:           #FFFFFF;
+  --background-soft:#EEF2F1;
+
+  /* Text */
+  --text-primary:   #1F2933;
+  --text-secondary: #4A5568;
+  --text-muted:     #9AB5AE;
+  --text-inverse:   #FFFFFF;
+
+  /* Semantic */
+  --success:        #6BAF92;
+  --success-soft:   #E8F5EE;
+  --warning:        #E7B75F;
+  --warning-soft:   #FDF3E0;
+
+  /* Border */
+  --border:         #DDE8E5;
+  --border-focus:   #5FA8A4;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus-visible ring using primary token */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
