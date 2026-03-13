@@ -7,21 +7,21 @@ export default function StreakDisplay() {
   const pct = Math.round((userProfile.streak / nextMilestone) * 100)
 
   return (
-    <div className="bg-gradient-to-br from-primary-soft to-[#D4EEE9] rounded-[12px] border border-primary/20 p-6 shadow-card">
+    <div className="bg-green-50 border-[0.8px] border-green-200 rounded-[16px] p-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <p className="text-[13px] font-bold text-text-secondary">Current Check-In Streak</p>
-        <div className="w-10 h-10 bg-success-soft rounded-[10px] flex items-center justify-center">
-          <Flame className="w-5 h-5 text-success" strokeWidth={1.8} />
+        <div className="w-9 h-9 bg-[#dcfce7] rounded-[10px] flex items-center justify-center">
+          <Flame className="w-[18px] h-[18px] text-success" strokeWidth={1.8} />
         </div>
       </div>
 
       {/* Value */}
       <div className="flex items-baseline gap-1.5 mb-3">
-        <span className="text-[48px] font-extrabold text-text-primary leading-none tracking-tight">
+        <span className="text-3xl font-bold text-text-primary leading-none">
           {userProfile.streak}
         </span>
-        <span className="text-[18px] font-bold text-text-secondary">Days</span>
+        <span className="text-[16px] font-bold text-text-secondary">Days</span>
       </div>
 
       {/* Progress to next milestone */}

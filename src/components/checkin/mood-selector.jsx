@@ -1,7 +1,6 @@
 // Generated with Claude Code assistance
 import { cn } from '@/lib/utils'
 import { moodOptions } from '@/data/data'
-import { Check } from 'lucide-react'
 
 export default function MoodSelector({ selected, onChange }) {
   return (
@@ -16,24 +15,22 @@ export default function MoodSelector({ selected, onChange }) {
             aria-label={mood.label}
             onClick={() => onChange(mood)}
             className={cn(
-              'flex-1 flex flex-col items-center gap-2.5 py-4 px-2 rounded-[12px] border-2 cursor-pointer transition-all',
-              'hover:border-primary hover:bg-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              'flex-1 flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-[12px] border-2 cursor-pointer transition-all',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500',
               isSelected
-                ? 'border-primary bg-primary-soft shadow-[0_0_0_3px_rgba(95,168,164,0.12)]'
-                : 'border-border bg-background'
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-200 hover:border-gray-300'
             )}
           >
             <span className="text-3xl leading-none">{mood.emoji}</span>
             <span className={cn(
-              'text-[12px] font-bold',
-              isSelected ? 'text-primary' : 'text-text-secondary'
+              'text-[12px] font-bold text-center',
+              isSelected ? 'text-green-600' : 'text-text-secondary'
             )}>
               {mood.label}
             </span>
             {isSelected && (
-              <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-              </div>
+              <span className="w-2 h-2 rounded-full bg-green-500" />
             )}
           </button>
         )

@@ -50,7 +50,7 @@ export default function CheckInPage() {
   }
 
   return (
-    <div className="p-6 md:p-10 flex flex-col gap-6 pb-24 md:pb-10">
+    <div className="pl-10 pt-7 pr-6 pb-24 md:pb-10 flex flex-col gap-[18px]">
 
       {/* Header */}
       <div className="flex flex-col gap-2">
@@ -90,38 +90,38 @@ export default function CheckInPage() {
         <SleepInput  value={sleep}  onChange={setSleep} />
       </div>
 
-      {/* Streak + Submit */}
-      <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-5 items-start">
+      {/* Streak + Submit side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px] items-start">
         <StreakDisplay />
 
-        {/* Submit card */}
-        <Card>
-          <CardContent className="flex flex-col gap-4">
+      {/* Submit card */}
+      <Card>
+        <CardContent>
+          <div className="flex flex-col gap-3">
             <h3 className="text-[15px] font-bold text-text-primary">Almost done!</h3>
             <p className="text-[13px] font-medium text-text-secondary">
-              Review your responses above, then submit your check-in.
+              Review your responses above, then submit your check-in. Your data stays private and helps personalise your journey.
             </p>
-
-            {/* Completion progress */}
             <Progress value={completion} label="Check-In Completion" />
 
             <Button
               variant="primary"
               size="lg"
-              className="w-full"
               onClick={handleSubmit}
               disabled={!mood}
               aria-label="Submit daily check-in"
+              className="w-full whitespace-nowrap rounded-[8px] pl-[9px] pr-4 py-3 gap-[10px]"
             >
               <CheckCircle2 className="w-4 h-4" />
               Submit Check-In
             </Button>
+          </div>
 
-            <p className="text-[13px] font-medium text-text-muted text-center italic">
-              ⭐ "Showing up for yourself today is a powerful step."
-            </p>
-          </CardContent>
-        </Card>
+          <p className="text-[13px] font-medium text-text-muted text-center italic mt-4">
+            ⭐ "Showing up for yourself today is a powerful step."
+          </p>
+        </CardContent>
+      </Card>
       </div>
 
     </div>

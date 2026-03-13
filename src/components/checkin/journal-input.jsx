@@ -1,5 +1,6 @@
 // Generated with Claude Code assistance
 import { useState } from 'react'
+import { BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const MAX_CHARS = 500
@@ -10,7 +11,10 @@ export default function JournalInput({ value, onChange }) {
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[13px] font-bold text-text-primary">Journal Entry</label>
+      <label className="text-[13px] font-bold text-text-primary flex items-center gap-1.5">
+        <BookOpen className="w-4 h-4 text-primary" strokeWidth={1.8} />
+        Journal Entry
+      </label>
       <div
         className={cn(
           'rounded-[8px] border overflow-hidden transition-all',
